@@ -1,0 +1,77 @@
+# ----------------------------
+# IntelliJ IDEA
+# ----------------------------
+.idea/
+*.iml
+*.iws
+out/
+# Archivos de configuración de workspace y caches de IntelliJ
+**/.idea/ # Asegura que ignora .idea en subdirectorios si existieran
+*.iws
+*.ipr
+*.iws
+
+# Archivos de historial local de IntelliJ (podría estar en .idea, pero a veces fuera)
+.history
+
+# Archivos de depuración y logs de IntelliJ
+*.log
+!castellarin-autorepuestos.iml # Si deseas incluir el archivo .iml principal (aunque se recomienda ignorarlo)
+
+# ----------------------------
+# Maven
+# ----------------------------
+target/
+.mvn/wrapper/maven-wrapper.jar # Archivo binario de Maven Wrapper
+# Carpeta donde Maven genera los builds y artefactos
+
+# ----------------------------
+# Spring Boot
+# ----------------------------
+# Los archivos generados por Spring Boot no necesitan versionarse
+spring.log
+*.log # Ya cubierto en "Archivos de sistema", pero por si acaso.
+
+# ----------------------------
+# Archivos de sistema y de otros editores/SOs
+# ----------------------------
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+ehthumbs.db
+.classpath
+.project
+.settings
+# Logs de la JVM y archivos de bloqueo
+hs_err_pid*
+*.lock
+
+# ----------------------------
+# Dependencias descargadas y artefactos de build
+# ----------------------------
+# No versionamos librerías externas
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+# Archivos de documentación generados
+apidocs/
+
+# ----------------------------
+# Otros
+# ----------------------------
+# Archivos de configuración locales que no deben ir al repo
+*.env
+*.local
+# Archivos de credenciales o secretos (ejemplos comunes)
+credentials.json
+key.pem
+secrets.yml
+/config/*.properties.local
+/config/*.yml.local
+castellarin-autorepuestos/mvnw.cmd
