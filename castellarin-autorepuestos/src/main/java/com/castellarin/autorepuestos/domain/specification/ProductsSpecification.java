@@ -9,7 +9,7 @@ public class ProductsSpecification {
     public static Specification<Product> hasCategory(String category){
         return (root, query, criteriaBuilder) -> {
             if(category != null){
-                return criteriaBuilder.equal(root.get("category"),category);
+                return criteriaBuilder.equal(root.get("category").get("category"),category);
             }
             return criteriaBuilder.conjunction();
         };
@@ -40,7 +40,7 @@ public class ProductsSpecification {
     public static Specification<Product> hasBrand(String brand){
         return (root, query, criteriaBuilder) -> {
             if(brand != null){
-                return criteriaBuilder.equal(root.get("brand"), brand);
+                return criteriaBuilder.equal(root.get("brand").get("brand"), brand);
             }
             else {
                 return criteriaBuilder.conjunction();
@@ -80,8 +80,8 @@ public class ProductsSpecification {
                 return criteriaBuilder.or(
                         criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), likeSearchTerm),
                         criteriaBuilder.like(criteriaBuilder.lower(root.get("brand")), likeSearchTerm),
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("description")),likeSearchTerm),
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("notas")), likeSearchTerm)
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("description")),likeSearchTerm)
+                        //criteriaBuilder.like(criteriaBuilder.lower(root.get("notas")), likeSearchTerm)
                 );
             }
             else {

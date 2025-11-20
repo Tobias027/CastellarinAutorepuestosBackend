@@ -11,7 +11,12 @@ import lombok.Data;
 @NoArgsConstructor
 @Table(name = "vehicle_brands")
 public class VehicleBrand {
+
     @Id
-    @Column(name = "vehicle_brand", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "vehicle_brand_id")
+    private Long id;
+
+    @Column(name = "vehicle_brand", nullable = false, unique = true)
     private String brand;
 }

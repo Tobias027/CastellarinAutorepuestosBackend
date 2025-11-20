@@ -18,12 +18,12 @@ public class OrderItem {
     @ManyToOne
     @MapsId("orderId")
     @JoinColumn(name="order_id",  nullable = false)
-    private Order orderId;
+    private Order order;
 
     @ManyToOne
     @MapsId("productId")
     @JoinColumn(name="product_id",nullable = false)
-    private Product productId;
+    private Product product;
 
     @Column(name="quantity", nullable = false)
     private Integer quantity;

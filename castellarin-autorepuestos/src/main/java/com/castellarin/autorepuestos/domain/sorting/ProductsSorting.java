@@ -10,7 +10,8 @@ import java.util.List;
 public class ProductsSorting {
 
 
-    /*Esta Truncado para solo price sino habria que crear un arraylist final con los posibles campos y que elija el campo que matchea con el parametro*/
+    /**TODO
+    Esta Truncado para solo price sino habria que crear un arraylist final con los posibles campos y que elija el campo que matchea con el parametro*/
     public static Sort createSort(String direction){
         return direction.equalsIgnoreCase("asc" )?
                 Sort.by("price").ascending()

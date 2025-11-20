@@ -5,16 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Table(name="order_addresses")
-public class OrderAddress {
+@Table(name="billing_address")
+public class BillingAddress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_address_id")
+    @Column(name = "billing_address_id")
     private Long id;
 
     @OneToOne
@@ -24,11 +24,8 @@ public class OrderAddress {
     @Column(name = "contact_name", nullable = false)
     private String contactName;
 
-    @Column(name = "contact_email", nullable = false)
-    private String contactEmail;
-
-    @Column(name = "contect_phone", nullable = false)
-    private String contectPhone;
+    @Column(name = "contact_surname", nullable = false)
+    private String contactSurname;
 
     @Column(nullable = false)
     private String street;

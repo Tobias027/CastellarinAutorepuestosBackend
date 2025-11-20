@@ -13,6 +13,10 @@ import lombok.NoArgsConstructor;
 public class ProductBrand {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_brand_id")
+    private Long id;
+
     @Column(name = "product_brand", nullable = false)
     private String brand;
 }

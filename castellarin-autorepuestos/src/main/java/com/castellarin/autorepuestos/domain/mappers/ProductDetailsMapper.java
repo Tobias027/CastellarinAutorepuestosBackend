@@ -14,19 +14,18 @@ import java.util.Map;
 public class ProductDetailsMapper {
     public static ProductDetailsDto toDto(Product product, List<Vehicle> compatibleVehicles) {
         return new ProductDetailsDto(
-                product.getProductId(),
-                product.getName(),
-                product.getBrand(),
-                product.getPartNumber(),
-                product.getCategory(),
-                product.getDescription(),
-                product.getSpecs(),
-                product.getPrice(),
-                product.getOfferPrice(),
-                product.getStock(),
-                product.getImageUrl(),
-                product.getNotes(),
-                VehicleMapper.vehiclestoDto(compatibleVehicles)
+            product.getName(),
+            product.getBrand(),
+            product.getPartNumber(),
+            product.getCategory(),
+            product.getDescription(),
+            product.getSpecs(),
+            product.getPrice(),
+            product.getOfferPrice(),
+            product.getStock(),
+            product.getImagePath(),
+            product.getNotes(),
+            VehicleMapper.toDtos(compatibleVehicles)
         );
     }
 }

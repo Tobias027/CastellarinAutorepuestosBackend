@@ -14,7 +14,6 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDetailsDto {
-    private Long product_id;
     private String name;
     private ProductBrand brand;
     private String partNumber;
@@ -24,7 +23,7 @@ public class ProductDetailsDto {
     private double price;
     private double offerPrice;
     private int stock;
-    private String imageUrl;
+    private String imagePath;
     private String notes;
     private List<VehicleDto> compatibleVehicles;
 }

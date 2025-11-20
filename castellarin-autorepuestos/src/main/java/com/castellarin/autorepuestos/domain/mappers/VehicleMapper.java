@@ -23,7 +23,7 @@ public class VehicleMapper {
         );
     }
 
-    public static List<VehicleDto> vehiclestoDto(List<Vehicle> vehicles){
+    public static List<VehicleDto> toDtos(List<Vehicle> vehicles){
         return vehicles.stream().map(VehicleMapper::toDto).collect(Collectors.toList());
     }
 }

@@ -4,6 +4,7 @@ import com.castellarin.autorepuestos.domain.entity.ProductVehicleComp;
 import com.castellarin.autorepuestos.domain.entity.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface ProductVehicleCompRepository extends JpaRepository<ProductVehic
             "LEFT JOIN vehicles v ON pvc.vehicle_id = v.vehicle_id " +
             "WHERE pvc.product_id = :productId",
             nativeQuery = true)
-    List<Vehicle> findCompatible(long productId);
+    List<Vehicle> findByProductId(@Param("productId") long productId);
 }

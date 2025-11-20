@@ -1,0 +1,41 @@
+meta {
+  name: Create Order
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BasePath}}/orders/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+       "userId":1,
+       "orderItemDtoList":[
+                           {1,5},
+                           {2,5},
+                           {3,5}
+       ],
+       "orderAddressDto": {
+                            "BOTH",
+                            "Tobias Castellarin",
+                            "castellarintobias@gmail.com",
+                            "+5491122519620",
+                            "O'higgins",
+                            "1451",
+                            "",
+                            "Quilmes",
+                            "Quilmes",
+                            "Buenos Aires",
+                            "1878"
+       },
+       "notes":"";
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,19 +1,15 @@
 package com.castellarin.autorepuestos.domain.dto;
 
-import com.castellarin.autorepuestos.domain.entity.Order;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
-
 @Data
 @AllArgsConstructor
-public class OrderAddressDto {
+public class BillingAddressDto {
     private String contactName;
     private String contactSurname;
-    private String contactEmail;
-    private String contectPhone;
     private String street;
     private String addressNumber;
     private Optional<String> apartmentUnit;

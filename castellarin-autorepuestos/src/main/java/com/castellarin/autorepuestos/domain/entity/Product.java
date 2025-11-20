@@ -18,7 +18,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id", nullable = false, unique = true)
+    @Column(name = "product_id", nullable = false)
     private Long productId;
 
     @Column(nullable = false)
@@ -28,7 +28,7 @@ public class Product {
     @JoinColumn(name = "product_brand", nullable = false)
     private ProductBrand brand;
 
-    @Column(name="part_number")
+    @Column(name="part_number", unique = true)
     private String partNumber;
 
     @ManyToOne
@@ -51,8 +51,8 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
-    @Column(name="image_url", nullable = false)
-    private String imageUrl;
+    @Column(name="image_path", nullable = false)
+    private String imagePath;
 
     @Column(name="is_active", nullable = false)
     private Boolean isActive;
