@@ -73,9 +73,15 @@ public class Order {
         address.setOrder(this);
     }
 
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos Aires"));
+        updatedAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos Aires"));
+    }
+
     @PreUpdate
     public void preUpdate() {
-        this.setUpdatedAt(LocalDateTime.now(ZoneId.of("Argentina/Buenos Aires")));
+        updatedAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos Aires"));
     }
 
 }

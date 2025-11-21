@@ -11,7 +11,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class OrderAddressDto {
     private String contactName;
-    private String contactSurname;
+    private String contactLastname;
     private String contactEmail;
     private String contectPhone;
     private String street;

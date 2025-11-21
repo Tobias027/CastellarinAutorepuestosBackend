@@ -5,33 +5,52 @@ meta {
 }
 
 post {
-  url: {{BasePath}}/orders/
+  url: {{BaseURL}}/orders/
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU1VBUklPIl0sInN1YiI6ImNhc3RlbGxhcmludG9iaWFzQHVhZGUuZWR1LmFyIiwiaWF0IjoxNzYzODI3MDU4fQ.ZwlkwenXfLr6xNfwDe5QhvuzY7FggNjpIFeaWEbULMc
 }
 
 body:json {
   {
-       "userId":1,
-       "orderItemDtoList":[
-                           {1,5},
-                           {2,5},
-                           {3,5}
+       "orderItems":[
+                           {"partNumber":1,
+                            "quantity":5},
+                           {"partNumber":2,
+                            "quantity":5},
+                           {"partNumber":3,
+                            "quantity":5}
        ],
-       "orderAddressDto": {
-                            "BOTH",
-                            "Tobias Castellarin",
-                            "castellarintobias@gmail.com",
-                            "+5491122519620",
-                            "O'higgins",
-                            "1451",
-                            "",
-                            "Quilmes",
-                            "Quilmes",
-                            "Buenos Aires",
-                            "1878"
+       "orderAddress": {
+                            "contactName":"Tobias",
+                            "contactLastname":"Castellarin",               
+                            "contactEmail":"castellarintobias@gmail.com",
+                            "contectPhone":"+5491122519620",
+                            "street":"O'higgins",
+                            "addressNumber":"1451",
+                            "apartmentUnit":null,
+                            "city":"Quilmes",
+                            "district":"Quilmes",
+                            "state":"Buenos Aires",
+                            "zip":"1878"
        },
-       "notes":"";
+       "billingAddress": {
+                            "contactName":"Tobias",
+                            "contactLastname":"Castellarin",               
+                            "contactEmail":"castellarintobias@gmail.com",
+                            "contectPhone":"+5491122519620",
+                            "street":"O'higgins",
+                            "addressNumber":"1451",
+                            "apartmentUnit":null,
+                            "city":"Quilmes",
+                            "district":"Quilmes",
+                            "state":"Buenos Aires",
+                            "zip":"1878"
+       },
+       "notes":"RAPIDITO LO QUIERO"
   }
 }
 

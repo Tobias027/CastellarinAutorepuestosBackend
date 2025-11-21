@@ -11,9 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDto {
-     private String email;
-     private List<OrderItemDto> orderItemsDto;
-     private OrderAddressDto orderAddressDto;
-     private BillingAddressDto billingAddressDto;
+     private List<OrderItemDto> orderItems;
+     private OrderAddressDto orderAddress;
+     private BillingAddressDto billingAddress;
      private String notes;
 }

@@ -10,6 +10,7 @@ import com.castellarin.autorepuestos.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,13 +36,13 @@ public class OrdersService {
 
 
     @Transactional
-    public Order createOrder(OrderDto orderDto){
+    public Order createOrder(UserDetails authenticatedUser, OrderDto orderDto){
         //USUARIO
-        User user = userService.getUserByEmail(orderDto.getEmail())
+        User user = userService.getUserByEmail(authenticatedUser.getUsername())
                 .orElseThrow(()->new EntityNotFoundException("User not found"));
 
         //ORDER ITEMS
-        List<OrderItem> orderItems = getOrderItems(orderDto.getOrderItemsDto());
+        List<OrderItem> orderItems = getOrderItems(orderDto.getOrderItems());
 
         //TOTALES
         Double subtotal = calculateSubtotal(orderItems);
@@ -59,15 +60,14 @@ public class OrdersService {
         order.setTax(taxAmount);
         order.setTotal(total);
         order.setNotes(orderDto.getNotes());
-        order.setCreatedAt(LocalDateTime.now(ZoneId.of("America/Buenos_Aires")));
 
         Order savedOrder = orderRepository.save(order);
         //ORDER ADDRESS
-        OrderAddress orderAddress = OrderAddressMapper.ToEntity(orderDto.getOrderAddressDto());
+        OrderAddress orderAddress = OrderAddressMapper.ToEntity(orderDto.getOrderAddress());
         orderAddress.setOrder(savedOrder);
         orderAddressRepository.save(orderAddress);
         //BILLING ADDRESS
-        BillingAddress billingAddress = BillingAddressMapper.toEntity(orderDto.getBillingAddressDto());
+        BillingAddress billingAddress = BillingAddressMapper.toEntity(orderDto.getBillingAddress());
         billingAddress.setOrder(savedOrder);
         billingAdressRepository.save(billingAddress);
 

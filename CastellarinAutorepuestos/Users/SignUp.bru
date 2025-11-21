@@ -1,0 +1,26 @@
+meta {
+  name: SignUp
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BaseURL}}/auth/signup
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "email":"castellarintobias@uade.edu.ar",
+      "password": "Tobias1234",
+      "confirmPassword": "Tobias1234",
+      "firstName": "Tobias",
+      "lastName": "Castellarin"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

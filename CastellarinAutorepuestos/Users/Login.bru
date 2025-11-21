@@ -1,0 +1,23 @@
+meta {
+  name: Login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BaseURL}}/auth/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "email":"castellarintobias@uade.edu.ar",
+      "password": "Tobias1234"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
