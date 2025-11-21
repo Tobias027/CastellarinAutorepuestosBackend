@@ -54,6 +54,7 @@ public class ProductsController {
     @PostMapping("/create_product")
     public ResponseEntity<Product> createProduct(@RequestBody CreateProductDto createProductDto) throws URISyntaxException {
         Product createdProduct = productsService.createProduct(createProductDto);
+        //TODO MODIFICAR URI
         URI location = new URI("http://localhost:8081/products/"+createdProduct.getProductId());
         return ResponseEntity.created(location).body(createdProduct);
     }
