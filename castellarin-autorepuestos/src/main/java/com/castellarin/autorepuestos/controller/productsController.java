@@ -1,6 +1,7 @@
 package com.castellarin.autorepuestos.controller;
 
 import com.castellarin.autorepuestos.domain.dto.CreateProductDto;
+import com.castellarin.autorepuestos.domain.dto.PageResponse;
 import com.castellarin.autorepuestos.domain.dto.ProductDetailsDto;
 import com.castellarin.autorepuestos.domain.dto.ProductDto;
 import com.castellarin.autorepuestos.domain.entity.Product;
@@ -30,9 +31,8 @@ public class ProductsController {
         return ResponseEntity.ok(productFeaturedDtos);
     }
 
-    //TODO: NO DEVOLVER UNA PAGE PORQUE LA ESTRUCTURA DE LA PAGE PUEDE CAMBIAR EN UN FUTURO Y ROMPERIA TODO
     @GetMapping("/")
-    public Page getProducts(
+    public ResponseEntity<PageResponse> getProducts(
             @RequestParam(value = "search_term", required = false) String searchTerm,
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "brand",required = false) String brand,
@@ -41,15 +41,8 @@ public class ProductsController {
             @RequestParam(value = "page",  required = false, defaultValue = "0") String page,
             @RequestParam(value = "direction",  required = false, defaultValue = "asc") String direction
     ){
-        return productsService.getProducts(
-                searchTerm,
-                category,
-                brand,
-                minPrice,
-                maxPrice,
-                page,
-                direction
-        );
+        PageResponse pageResponse = productsService.getProducts(searchTerm,category,brand,minPrice,maxPrice,page,direction);
+        return ResponseEntity.ok(pageResponse);
     }
 
     @GetMapping("/{part_number}")

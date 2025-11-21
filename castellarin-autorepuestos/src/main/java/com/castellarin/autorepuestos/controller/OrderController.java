@@ -19,11 +19,9 @@ public class OrderController {
 
     private final OrdersService ordersService;
 
-
-    @PostMapping("/")
-    public ResponseEntity<OrderDto> createOrder(
-            @RequestBody OrderDto orderDto
-    ) {
+    //TODO TAL VEZ IMPLEMENTAR AUTHENTICATED PARA OBTENER EL USERID
+    @PostMapping("/create_order")
+    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto){
         Order order = ordersService.createOrder(orderDto);
         OrderDto orderDtoResponse =  OrderMapper.toDto(order);
         return ResponseEntity.ok(orderDtoResponse);

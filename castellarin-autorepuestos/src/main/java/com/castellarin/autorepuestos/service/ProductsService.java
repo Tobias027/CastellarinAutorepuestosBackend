@@ -1,6 +1,7 @@
 package com.castellarin.autorepuestos.service;
 
 import com.castellarin.autorepuestos.domain.dto.CreateProductDto;
+import com.castellarin.autorepuestos.domain.dto.PageResponse;
 import com.castellarin.autorepuestos.domain.dto.ProductDetailsDto;
 import com.castellarin.autorepuestos.domain.dto.ProductDto;
 import com.castellarin.autorepuestos.domain.entity.Category;
@@ -44,14 +45,12 @@ public class ProductsService {
     private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_SIZE = 20;
 
-    //TODO es correcto devolver asi o debo devolver un ResponseEntity?
     public List<ProductDto> getFeaturedProducts(){
         List<ProductDto> productDtos = productRepository.findFeaturedProducts();
         return productDtos;
     }
 
-    //TODO es correcto devolver una page ??
-    public Page getProducts(
+    public PageResponse getProducts(
             String searchTerm,
             String category,
             String brand,
@@ -70,17 +69,17 @@ public class ProductsService {
         Pageable pageable = ProductsSorting.createPageable(Integer.parseInt(page), DEFAULT_SIZE, direction);
 
         Page<Product> products = productRepository.findAll(specification, pageable);
-        return products.map(ProductMapper::toDto);
+        return PageResponse.of(products);
     }
 
     public ProductDetailsDto getProductById(long productId){
         Product product = productRepository.findById(productId);
         if(product == null){
-            throw new EntityNotFoundException("Producto no encontrado");
+            return null;
         }
-        List<Vehicle> compatible_vehicles = productVehicleCompRepository.findByProductId(productId);
+        List<Vehicle> compatible_vehicles = productVehicleCompRepository.findByProductId(product.getProductId());
         if(compatible_vehicles.isEmpty()) {
-            throw new EntityNotFoundException("Compatibilidad no encontrada");
+            return null;
         }
         return ProductDetailsMapper.toDto(product,compatible_vehicles);
     }
@@ -88,12 +87,10 @@ public class ProductsService {
     public ProductDetailsDto getProductDetailsByProductPart(String productPart){
         Product product = productRepository.findByPartNumber(productPart);
         if(product == null){
-            //throw new EntityNotFoundException("Producto no encontrado");
             return null;
         }
         List<Vehicle> compatible_vehicles = productVehicleCompRepository.findByProductId(product.getProductId());
         if(compatible_vehicles.isEmpty()) {
-            //throw new EntityNotFoundException("Compatibilidad no encontrada");
             return null;
         }
         return ProductDetailsMapper.toDto(product,compatible_vehicles);
@@ -109,25 +106,22 @@ public class ProductsService {
 
     public Product createProduct(CreateProductDto createProductDto){
         Product product = new Product();
-        System.out.println("BRANDS: "+productBrandRepository.findAll());
-        System.out.println("CATEGORIES: "+categoryRepository.findAll());
         ProductBrand brand = productBrandRepository.findProductBrandByBrand(createProductDto.getBrand());
-
-        //Category category = categoryRepository.findAll(createProductDto.getCategory());
+        Category category = categoryRepository.findByCategory(createProductDto.getCategory());
         String imagePath = imageService.uploadProductsImage(createProductDto.getBase64Image(),createProductDto.getName());
 
         product.setName(createProductDto.getName());
         product.setBrand(brand);
         product.setPartNumber(createProductDto.getPartNumber());
-        //product.setCategory(category);
+        product.setCategory(category);
         product.setDescription(createProductDto.getDescription());
         product.setSpecs(createProductDto.getSpecs());
         product.setPrice(createProductDto.getPrice());
         product.setOfferPrice(createProductDto.getOfferPrice());
         product.setStock(createProductDto.getStock());
         product.setImagePath(imagePath);
-        product.setIsActive(product.getIsActive());
-        product.setCostPrice(product.getCostPrice());
+        product.setIsActive(createProductDto.getIsActive());
+        product.setCostPrice(createProductDto.getCostPrice());
         product.setNotes(createProductDto.getNotes());
 
         Product createdProduct = productRepository.save(product);

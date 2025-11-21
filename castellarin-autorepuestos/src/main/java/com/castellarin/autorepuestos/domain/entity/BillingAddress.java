@@ -24,8 +24,8 @@ public class BillingAddress {
     @Column(name = "contact_name", nullable = false)
     private String contactName;
 
-    @Column(name = "contact_surname", nullable = false)
-    private String contactSurname;
+    @Column(name = "contact_lastname", nullable = false)
+    private String contactLastname;
 
     @Column(nullable = false)
     private String street;

@@ -9,7 +9,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class BillingAddressDto {
     private String contactName;
-    private String contactSurname;
+    private String contactLastname;
     private String street;
     private String addressNumber;
     private Optional<String> apartmentUnit;

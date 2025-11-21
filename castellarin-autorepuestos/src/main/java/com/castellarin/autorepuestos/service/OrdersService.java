@@ -3,6 +3,7 @@ package com.castellarin.autorepuestos.service;
 import com.castellarin.autorepuestos.domain.dto.OrderDto;
 import com.castellarin.autorepuestos.domain.dto.OrderItemDto;
 import com.castellarin.autorepuestos.domain.entity.*;
+import com.castellarin.autorepuestos.domain.mappers.BillingAddressMapper;
 import com.castellarin.autorepuestos.domain.mappers.OrderAddressMapper;
 import com.castellarin.autorepuestos.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,14 +31,33 @@ public class OrdersService {
         Order newOrder = new Order();
 
         //OBTENER ENTIDADES NECESARIAS
+        //USER
         Optional<User> user = Optional.of(userService.getUserByEmail(orderDto.getEmail())
                 .orElseThrow(()->new EntityNotFoundException("User not found")));
-
-        OrderAddress orderAddress = OrderAddressMapper.ToEntity(orderDto.getOrderAddressDto());
-
+        //STATUS
+        newOrder.setStatus(OrderStatus.PENDING);
+        //SUBTOTAL
         List<OrderItem> orderItems = getOrderItems(orderDto.getOrderItemDtoList());
 
         Double subtotal = getOrderItemsSubtotal(orderItems);
+
+        //SHIPPING_COST
+        newOrder.setShipping(0.0);
+        //TAX_AMOUNT
+        newOrder.setTax(0.0);
+
+
+        //TOTAL_AMOUNT
+        newOrder.setTotal(subtotal);
+        //NOTES
+        newOrder.setNotes(orderDto.getNotes());
+
+        //ORDER ADDRESS
+        OrderAddress orderAddress = OrderAddressMapper.ToEntity(orderDto.getOrderAddressDto());
+        //BILLING ADDRESS
+        BillingAddress billingAddress = BillingAddressMapper.toEntity(orderDto.getBillingAddressDto());
+
+
 
         newOrder.setUser(user.get());
         newOrder.setAddress(orderAddress);

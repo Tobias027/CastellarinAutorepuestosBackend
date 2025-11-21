@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 @Table(name="order_items")
 public class OrderItem {
 
-    @EmbeddedId
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "order_item_id")
     private OrderItemId id;
 
     @ManyToOne
