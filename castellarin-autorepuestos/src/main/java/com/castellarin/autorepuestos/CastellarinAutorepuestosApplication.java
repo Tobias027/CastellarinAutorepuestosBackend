@@ -1,5 +1,7 @@
 package com.castellarin.autorepuestos;
 
+import com.mercadopago.MercadoPagoConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -15,8 +17,12 @@ public class CastellarinAutorepuestosApplication {
     * IMPLEMENTAR LOGICA DE INICIO DE SESION
     * */
 
+	@Value("{$mp.test.access-token}")
+	private static String accessToken;
+
 	public static void main(String[] args) {
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+		MercadoPagoConfig.setAccessToken(accessToken);
 		SpringApplication.run(CastellarinAutorepuestosApplication.class, args);
 	}
 

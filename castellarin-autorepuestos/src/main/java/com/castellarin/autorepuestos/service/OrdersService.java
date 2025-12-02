@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 public class OrdersService {
 
     private final ProductRepository productRepository;
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
     private final ProductsService productsService;
     private final UserService userService;
 
@@ -36,7 +36,7 @@ public class OrdersService {
 
 
     @Transactional
-    public Order createOrder(UserDetails authenticatedUser, OrderDto orderDto){
+    public Order createOrder(User authenticatedUser, OrderDto orderDto){
         //USUARIO
         User user = userService.getUserByEmail(authenticatedUser.getUsername())
                 .orElseThrow(()->new EntityNotFoundException("User not found"));
@@ -58,6 +58,7 @@ public class OrdersService {
         order.setStatus(OrderStatus.PENDING);
         order.setSubtotal(subtotal);
         order.setTax(taxAmount);
+        order.setShipping(shippingCost);
         order.setTotal(total);
         order.setNotes(orderDto.getNotes());
 
@@ -72,13 +73,62 @@ public class OrdersService {
         billingAdressRepository.save(billingAddress);
 
         for(OrderItem orderItem : orderItems){
+            OrderItemId orderItemId = new OrderItemId(
+                    order.getOrderId(),
+                    orderItem.getProduct().getProductId()
+            );
+            orderItem.setId(orderItemId);
             orderItem.setOrder(savedOrder);
         }
         orderItemsRepository.saveAll(orderItems);
 
+        order.setAddress(orderAddress);
+        order.setBillingAddress(billingAddress);
+        order.setItems(orderItems);
+
+        savedOrder = orderRepository.save(order);
+
         updateProductStock(orderItems);
 
         return savedOrder;
+    }
+
+    public Order createPendingOrder(User authenticatedUser, OrderDto orderDto){
+        //USUARIO
+        User user = userService.getUserByEmail(authenticatedUser.getUsername())
+                .orElseThrow(()->new EntityNotFoundException("User not found"));
+
+        //ORDER ITEMS
+        List<OrderItem> orderItems = getOrderItems(orderDto.getOrderItems());
+
+        //TOTALES
+        Double subtotal = calculateSubtotal(orderItems);
+        //TODO
+        Double shippingCost = 0.0;
+        //TODO
+        Double taxAmount = 0.0;
+
+        Double total = subtotal+shippingCost+taxAmount;
+
+        Order order = new Order();
+        order.setUser(user);
+        order.setStatus(OrderStatus.PENDING);
+        order.setSubtotal(subtotal);
+        order.setTax(taxAmount);
+        order.setShipping(shippingCost);
+        order.setTotal(total);
+        order.setNotes(orderDto.getNotes());
+
+        //ORDER ADDRESS
+        OrderAddress orderAddress = OrderAddressMapper.ToEntity(orderDto.getOrderAddress());
+        //BILLING ADDRESS
+        BillingAddress billingAddress = BillingAddressMapper.toEntity(orderDto.getBillingAddress());
+
+        order.setAddress(orderAddress);
+        order.setBillingAddress(billingAddress);
+        order.setItems(orderItems);
+
+        return order;
     }
 
     private List<OrderItem> getOrderItems(List<OrderItemDto> orderItemDtoList){
