@@ -5,9 +5,13 @@ meta {
 }
 
 get {
-  url: {{BaseURL}}/products/
+  url: {{BaseURL}}/products/?category=direccion
   body: none
   auth: inherit
+}
+
+params:query {
+  category: direccion
 }
 
 settings {
