@@ -4,9 +4,13 @@ import com.castellarin.autorepuestos.domain.dto.auth_dtos.LoginRequest;
 import com.castellarin.autorepuestos.domain.dto.auth_dtos.SignUpRequest;
 import com.castellarin.autorepuestos.domain.entity.Role;
 import com.castellarin.autorepuestos.domain.entity.User;
+import com.castellarin.autorepuestos.exceptions.ConflictException;
 import com.castellarin.autorepuestos.repository.UserRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,12 +46,16 @@ public class AuthenticationService {
             null,
             null
         );
-        return userRepository.save(user);
+        try {
+            return userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new ConflictException("El email ya está asociado a una cuenta");
+        }
     }
 
     public User authenticate(LoginRequest input) {
         User user = userRepository.findByEmail(input.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
 
         if (!user.isEnabled()) {
             throw new RuntimeException("Account not verified. Please verify your account.");
