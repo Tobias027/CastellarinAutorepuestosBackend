@@ -73,13 +73,13 @@ public class Product {
 
     @PrePersist
     public void prePersist() {
-        createdAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos Aires"));
-        updatedAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos Aires"));
+        createdAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"));
+        updatedAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"));
     }
 
     @PreUpdate
     public void preUpdate() {
-        updatedAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos Aires"));
+        updatedAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"));
     }
 
 }
