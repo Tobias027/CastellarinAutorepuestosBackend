@@ -1,7 +1,9 @@
 package com.castellarin.autorepuestos.service;
 
+import com.castellarin.autorepuestos.domain.dto.PreferenceDto;
 import com.castellarin.autorepuestos.domain.entity.Order;
 import com.castellarin.autorepuestos.domain.entity.OrderItem;
+import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
@@ -9,8 +11,8 @@ import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
-import com.mercadopago.resources.preference.PreferenceBackUrls;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,7 +23,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MercadoPagoService {
 
-    public String createPreference(Order order){
+    @Value("${mp.test.access-token}")
+    private String testAccessToken;
+
+    public PreferenceDto createPreference(Order order){
+
+        MercadoPagoConfig.setAccessToken(testAccessToken);
+
         List<PreferenceItemRequest> items = new ArrayList<>();
 
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
@@ -29,15 +37,11 @@ public class MercadoPagoService {
                 .pending("http://localhost:8080/pending")
                 .failure("http://localhost:8080/failure")
                 .build();
-
         for(OrderItem orderItem : order.getItems()){
             PreferenceItemRequest itemRequest =
                     PreferenceItemRequest.builder()
-                            .id("")
+                            .id(orderItem.getProduct().getPartNumber())
                             .title(orderItem.getProduct().getName())
-                            .description(orderItem.getProduct().getDescription())
-                            .pictureUrl(orderItem.getProduct().getImagePath())
-                            .categoryId(orderItem.getProduct().getCategory().getCategory())
                             .quantity(orderItem.getQuantity())
                             .currencyId("ARS")
                             .unitPrice(new BigDecimal(orderItem.getProduct().getPrice()))
@@ -48,12 +52,12 @@ public class MercadoPagoService {
                 .items(items)
                 .backUrls(backUrls)
                 .build();
+
         PreferenceClient client = new PreferenceClient();
 
         try {
             Preference preference = client.create(preferenceRequest);
-            return  preference.getId();
-
+            return  new PreferenceDto(preference.getId());
         } catch (MPException mpException) {
             throw new RuntimeException(mpException);
         } catch (MPApiException apiException) {
