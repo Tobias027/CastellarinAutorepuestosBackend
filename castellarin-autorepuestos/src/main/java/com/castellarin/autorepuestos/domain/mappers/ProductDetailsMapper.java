@@ -15,9 +15,9 @@ public class ProductDetailsMapper {
     public static ProductDetailsDto toDto(Product product, List<Vehicle> compatibleVehicles) {
         return new ProductDetailsDto(
             product.getName(),
-            product.getBrand(),
+            product.getBrand().getBrand(),
             product.getPartNumber(),
-            product.getCategory(),
+            product.getCategory().getCategory(),
             product.getDescription(),
             product.getSpecs(),
             product.getPrice(),

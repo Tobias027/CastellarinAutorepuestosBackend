@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class VehicleMapper {
     public static VehicleDto toDto(Vehicle vehicle){
         return new VehicleDto(
-            vehicle.getBrand(),
+            vehicle.getBrand().getBrand(),
             vehicle.getModel(),
             vehicle.getStartProduction(),
             vehicle.getEndProduction(),

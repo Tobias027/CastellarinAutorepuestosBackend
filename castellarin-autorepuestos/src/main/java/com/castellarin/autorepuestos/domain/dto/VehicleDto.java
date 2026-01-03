@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VehicleDto {
-    private VehicleBrand Brand;
+    private String Brand;
     private String Model;
     private LocalDate startProduction;
     private LocalDate endProduction;

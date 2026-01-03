@@ -15,9 +15,9 @@ import java.util.Map;
 @NoArgsConstructor
 public class ProductDetailsDto {
     private String name;
-    private ProductBrand brand;
+    private String brand;
     private String partNumber;
-    private Category category;
+    private String category;
     private String description;
     private Map<String, Object> specs;
     private double price;
