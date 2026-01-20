@@ -1,13 +1,7 @@
 package com.castellarin.autorepuestos.service;
 
-import com.castellarin.autorepuestos.domain.dto.CreateProductDto;
-import com.castellarin.autorepuestos.domain.dto.PageResponse;
-import com.castellarin.autorepuestos.domain.dto.ProductDetailsDto;
-import com.castellarin.autorepuestos.domain.dto.ProductDto;
-import com.castellarin.autorepuestos.domain.entity.Category;
-import com.castellarin.autorepuestos.domain.entity.Product;
-import com.castellarin.autorepuestos.domain.entity.ProductBrand;
-import com.castellarin.autorepuestos.domain.entity.Vehicle;
+import com.castellarin.autorepuestos.domain.dto.*;
+import com.castellarin.autorepuestos.domain.entity.*;
 import com.castellarin.autorepuestos.domain.mappers.ProductDetailsMapper;
 import com.castellarin.autorepuestos.domain.mappers.ProductMapper;
 import com.castellarin.autorepuestos.domain.sorting.ProductsSorting;
@@ -19,19 +13,12 @@ import com.castellarin.autorepuestos.repository.ProductRepository;
 import com.castellarin.autorepuestos.repository.ProductVehicleCompRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -46,29 +33,26 @@ public class ProductsService {
     private static final int DEFAULT_SIZE = 20;
 
     public List<ProductDto> getFeaturedProducts(){
-        List<ProductDto> productDtos = productRepository.findFeaturedProducts();
-        return productDtos;
+        return productRepository.findFeaturedProducts();
     }
 
     public PageResponse getProducts(
             String searchTerm,
             String category,
             String brand,
-            Double minPrice,
-            Double maxPrice,
             String page,
             String direction
     ){
         Specification<Product> specification = Specification.allOf(ProductsSpecification.isActive())
                 .and(ProductsSpecification.contains(searchTerm))
                 .and(ProductsSpecification.hasBrand(brand))
-                .and(ProductsSpecification.hasCategory(category))
-                .and(ProductsSpecification.priceLowerthan(minPrice))
-                .and((ProductsSpecification.priceGreaterthan(maxPrice)));
+                .and(ProductsSpecification.hasCategory(category));
+                //.and(ProductsSpecification.priceLowerthan(minPrice))
+                //.and(ProductsSpecification.priceGreaterthan(maxPrice));
 
         Pageable pageable = ProductsSorting.createPageable(Integer.parseInt(page), DEFAULT_SIZE, direction);
 
-        Page<Product> products = productRepository.findAll(specification, pageable);
+        Page products = productRepository.findAll(specification, pageable);
         return PageResponse.of(products);
     }
 
@@ -85,7 +69,7 @@ public class ProductsService {
     }
 
     public ProductDetailsDto getProductDetailsByProductPart(String productPart){
-        Product product = productRepository.findByPartNumber(productPart);
+        Product product = productRepository.findProductByPartNumber(productPart);
         if(product == null){
             return null;
         }
@@ -96,10 +80,18 @@ public class ProductsService {
         return ProductDetailsMapper.toDto(product,compatible_vehicles);
     }
 
+    public List<ProductCartDto> getProductByProductsParts(List<String> productsParts){
+        List<Product> products = productRepository.getProductsByPartNumberIsIn(productsParts);
+        return ProductMapper.toCartProductsDto(products);
+    }
+
     public Product getProductByProductPart(String productPart){
-        Product product = productRepository.findByPartNumber(productPart);
-        if(product == null){
-            throw new EntityNotFoundException("Producto no encontrado");
+        Product product = productRepository.findProductByPartNumber(productPart);
+        if(product==null){
+            throw new EntityNotFoundException("Product not found");
+        }
+        if(!product.getIsActive()){
+            throw new EntityNotFoundException("Product is not active");
         }
         return product;
     }
@@ -124,9 +116,7 @@ public class ProductsService {
         product.setCostPrice(createProductDto.getCostPrice());
         product.setNotes(createProductDto.getNotes());
 
-        Product createdProduct = productRepository.save(product);
-
-        return createdProduct;
+        return productRepository.save(product);
     }
 
 }

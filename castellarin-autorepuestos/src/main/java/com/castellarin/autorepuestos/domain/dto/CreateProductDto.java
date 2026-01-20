@@ -1,14 +1,10 @@
 package com.castellarin.autorepuestos.domain.dto;
 
-import com.castellarin.autorepuestos.domain.entity.Category;
-import com.castellarin.autorepuestos.domain.entity.ProductBrand;
 import lombok.Data;
 
-import java.util.Base64;
 import java.util.Map;
 @Data
 public class CreateProductDto {
-    //private Long productId;
     private String name;
     private String brand;
     private String partNumber;

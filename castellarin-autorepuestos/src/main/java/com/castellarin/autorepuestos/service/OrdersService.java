@@ -5,21 +5,14 @@ import com.castellarin.autorepuestos.domain.dto.OrderItemDto;
 import com.castellarin.autorepuestos.domain.entity.*;
 import com.castellarin.autorepuestos.domain.mappers.BillingAddressMapper;
 import com.castellarin.autorepuestos.domain.mappers.OrderAddressMapper;
-import com.castellarin.autorepuestos.domain.mappers.OrderMapper;
 import com.castellarin.autorepuestos.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.TimeZone;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -131,7 +124,7 @@ public class OrdersService {
         return order;
     }
 
-    private List<OrderItem> getOrderItems(List<OrderItemDto> orderItemDtoList){
+    public List<OrderItem> getOrderItems(List<OrderItemDto> orderItemDtoList){
         List<OrderItem> orderItems = new ArrayList<>();
 
         for (OrderItemDto orderItemDto : orderItemDtoList) {

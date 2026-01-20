@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.time.ZoneId;
 import java.util.TimeZone;
 
 @SpringBootApplication
@@ -17,13 +16,16 @@ public class CastellarinAutorepuestosApplication {
     * IMPLEMENTAR LOGICA DE INICIO DE SESION
     * */
 
-	@Value("{$mp.test.access-token}")
-	private static String accessToken;
+	@Value("${mp.test.access-token}")
+	private String accessToken;
 
 	public static void main(String[] args) {
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-		MercadoPagoConfig.setAccessToken(accessToken);
 		SpringApplication.run(CastellarinAutorepuestosApplication.class, args);
 	}
 
+	@jakarta.annotation.PostConstruct
+	public void initMP() {
+		MercadoPagoConfig.setAccessToken(accessToken);
+	}
 }

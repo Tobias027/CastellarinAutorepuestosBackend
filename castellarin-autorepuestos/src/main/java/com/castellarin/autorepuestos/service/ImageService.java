@@ -1,43 +1,38 @@
 package com.castellarin.autorepuestos.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.UUID;
 
 @Service
 public class ImageService {
 
-    private String basePath = "/home/uploads";
-
     public String uploadProductsImage(String base64Image, String productName) {
-        String productsPath = basePath + "/products/";
-        File uploadDir = new File(productsPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
 
-        String cleanBase64 = base64Image.split(",")[1];
-        String uniqueFileName = productName+UUID.randomUUID().toString() + ".jpg";
-        String finalPath = productsPath + uniqueFileName;
+        Path path = Paths.get(System.getProperty("user.home"), "uploads", "products");
 
         try{
-            byte[] decodedByte = Base64.getDecoder().decode(cleanBase64);
-
-            try(FileOutputStream fos = new FileOutputStream(finalPath)){
-                fos.write(decodedByte);
+            if (!Files.exists(path)){
+                Files.createDirectories(path);
             }
 
+            String[] parts = base64Image.split(",");
+            String cleanBase64 = (parts.length > 1) ? parts[1] : parts[0];
+            String uniqueFileName = productName.replace(" ", "_")+"_"+UUID.randomUUID().toString()+".jpg";
+            Path filePath = path.resolve(uniqueFileName);
+            byte[] decodeBytes = Base64.getDecoder().decode(cleanBase64);
+            Files.write(filePath, decodeBytes);
             return "/products/"+uniqueFileName;
-
         } catch(IOException e){
             throw new RuntimeException("Error while uploading image", e);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Base64 invalid input", e);
+        throw new RuntimeException("El formato Base64 es inválido", e);
         }
     }
+
 }
