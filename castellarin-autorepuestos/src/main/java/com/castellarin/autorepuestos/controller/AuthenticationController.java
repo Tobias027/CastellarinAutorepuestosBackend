@@ -51,8 +51,8 @@ public class AuthenticationController {
 
         ResponseCookie cookie = ResponseCookie.from("JWT_TOKEN", jwtToken)
                 .httpOnly(true)
-                .secure(false) //TODO poner true para que sea https
-                .sameSite("Lax") //STRICT
+                .secure(true) //TODO poner true para que sea https
+                .sameSite("None") //STRICT
                 .path("/")
                 .maxAge(86400)
                 .build();
