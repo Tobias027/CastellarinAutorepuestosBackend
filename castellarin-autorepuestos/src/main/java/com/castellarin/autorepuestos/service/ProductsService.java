@@ -44,9 +44,9 @@ public class ProductsService {
             String direction
     ){
         Specification<Product> specification = Specification.allOf(ProductsSpecification.isActive())
-                .and(ProductsSpecification.contains(searchTerm.toLowerCase()))
-                .and(ProductsSpecification.hasBrand(brand.toLowerCase()))
-                .and(ProductsSpecification.hasCategory(category.toLowerCase()));
+                .and(ProductsSpecification.contains(searchTerm))
+                .and(ProductsSpecification.hasBrand(brand))
+                .and(ProductsSpecification.hasCategory(category));
                 //.and(ProductsSpecification.priceLowerthan(minPrice))
                 //.and(ProductsSpecification.priceGreaterthan(maxPrice));
 
