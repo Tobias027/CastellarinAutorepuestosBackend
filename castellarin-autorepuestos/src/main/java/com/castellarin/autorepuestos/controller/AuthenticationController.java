@@ -42,6 +42,11 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<Map<String,String>> authenticate(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         User authenticatedUser = authenticationService.authenticate(loginRequest);
+
+        if(authenticatedUser == null){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Debes iniciar sesion");
+        }
+        
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
         ResponseCookie cookie = ResponseCookie.from("JWT_TOKEN", jwtToken)
