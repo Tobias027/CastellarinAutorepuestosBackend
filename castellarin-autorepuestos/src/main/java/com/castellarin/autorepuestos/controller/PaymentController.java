@@ -29,10 +29,10 @@ public class PaymentController {
     }
 
     @PostMapping("/webhook")
-    public ResponseEntity<String> receiveNotification(@RequestHeader String header,@RequestBody String request){
-        List<String> metadata = Arrays.stream(header.split(",")).toList();
+    public ResponseEntity<String> receiveNotification(@RequestHeader("x-signature") String signature,@RequestBody String payload){
+        List<String> metadata = Arrays.stream(signature.split(",")).toList();
         System.out.println(metadata);
-        System.out.println(request);
+        System.out.println(payload);
         return ResponseEntity.ok("");
     }
 }
