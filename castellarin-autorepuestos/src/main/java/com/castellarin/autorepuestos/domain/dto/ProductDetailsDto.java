@@ -14,17 +14,16 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDetailsDto {
-    private Long product_id;
     private String name;
-    private ProductBrand brand;
+    private String brand;
     private String partNumber;
-    private Category category;
+    private String category;
     private String description;
     private Map<String, Object> specs;
     private double price;
     private double offerPrice;
     private int stock;
-    private String imageUrl;
+    private String imagePath;
     private String notes;
     private List<VehicleDto> compatibleVehicles;
 }

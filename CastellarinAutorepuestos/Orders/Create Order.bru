@@ -1,0 +1,57 @@
+meta {
+  name: Create Order
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BaseURL}}/orders/create-order
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU1VBUklPIl0sInN1YiI6ImNhc3RlbGxhcmludG9iaWFzQHVhZGUuZWR1LmFyIiwiaWF0IjoxNzY0NDQ0OTgzLCJleHAiOjE3NjQ1MzEzODN9.QpHQg-8bmZ7lpyzLRtQJqHYy2LAR3qKGFrgqrsiAegI
+}
+
+body:json {
+  {
+    "orderItems": [
+      { "partNumber":"MROE45465", "quantity":5 },
+      { "partNumber":"SKF454564", "quantity":5 },
+      { "partNumber":"SKF4526", "quantity":5 }
+    ],
+    "orderAddress": {
+      "contactName":"Tobias",
+      "contactLastname":"Castellarin",
+      "contactEmail":"castellarintobias@gmail.com",
+      "contactPhone":"+5491122519620",
+      "street":"O'higgins",
+      "addressNumber":"1451",
+      "apartmentUnit": null,
+      "city":"Quilmes",
+      "district":"Quilmes",
+      "state":"Buenos Aires",
+      "zip":"1878"
+    },
+    "billingAddress": {
+      "contactName":"Tobias",
+      "contactLastname":"Castellarin",
+      "street":"O'higgins",
+      "addressNumber":"1451",
+      "apartmentUnit": null,
+      "city":"Quilmes",
+      "district":"Quilmes",
+      "state":"Buenos Aires",
+      "zip":"1878"
+    },
+    "notes":"RAPIDITO LO QUIERO"
+  }
+  
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @AllArgsConstructor
@@ -14,16 +15,13 @@ public class OrderAddress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_adrress", nullable = false)
-    private Long orderAdrress;
+    @Column(name = "order_address_id")
+    private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "order_id", nullable = false)
-    private Order orderId;
-
-    @Column(name = "address_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private AddressType addressType;
+    @ToString.Exclude
+    private Order order;
 
     @Column(name = "contact_name", nullable = false)
     private String contactName;
@@ -54,7 +52,4 @@ public class OrderAddress {
 
     @Column(nullable = false)
     private String zip;
-
-    @Column(nullable = false)
-    private String country;
 }

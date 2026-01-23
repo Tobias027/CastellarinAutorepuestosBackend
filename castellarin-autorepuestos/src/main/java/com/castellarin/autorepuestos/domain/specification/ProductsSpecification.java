@@ -1,6 +1,5 @@
 package com.castellarin.autorepuestos.domain.specification;
 
-import com.castellarin.autorepuestos.domain.dto.ProductDto;
 import com.castellarin.autorepuestos.domain.entity.Product;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -9,7 +8,7 @@ public class ProductsSpecification {
     public static Specification<Product> hasCategory(String category){
         return (root, query, criteriaBuilder) -> {
             if(category != null){
-                return criteriaBuilder.equal(root.get("category"),category);
+                return criteriaBuilder.equal(root.get("category").get("category"), category.toLowerCase());
             }
             return criteriaBuilder.conjunction();
         };
@@ -40,7 +39,7 @@ public class ProductsSpecification {
     public static Specification<Product> hasBrand(String brand){
         return (root, query, criteriaBuilder) -> {
             if(brand != null){
-                return criteriaBuilder.equal(root.get("brand"), brand);
+                return criteriaBuilder.equal(root.get("brand").get("brand"), brand.toLowerCase());
             }
             else {
                 return criteriaBuilder.conjunction();
@@ -76,12 +75,12 @@ public class ProductsSpecification {
     public static Specification<Product> contains(String searchTerm){
         return (root, query, criteriaBuilder) -> {
             if(searchTerm != null){
-                String likeSearchTerm = "%"+searchTerm.toLowerCase()+"%";
+                String likeSearchTerm = "%"+ searchTerm.toLowerCase()+"%";
                 return criteriaBuilder.or(
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), likeSearchTerm),
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("brand")), likeSearchTerm),
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("description")),likeSearchTerm),
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("notas")), likeSearchTerm)
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), likeSearchTerm.toLowerCase()),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("brand").get("brand")), likeSearchTerm.toLowerCase()),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("description")),likeSearchTerm.toLowerCase())
+                        //criteriaBuilder.like(criteriaBuilder.lower(root.get("notas")), likeSearchTerm)
                 );
             }
             else {

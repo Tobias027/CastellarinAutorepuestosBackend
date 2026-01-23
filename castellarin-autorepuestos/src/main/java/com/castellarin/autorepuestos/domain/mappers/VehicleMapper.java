@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class VehicleMapper {
     public static VehicleDto toDto(Vehicle vehicle){
         return new VehicleDto(
-            vehicle.getBrand(),
+            vehicle.getBrand().getBrand(),
             vehicle.getModel(),
             vehicle.getStartProduction(),
             vehicle.getEndProduction(),
@@ -23,7 +23,7 @@ public class VehicleMapper {
         );
     }
 
-    public static List<VehicleDto> vehiclestoDto(List<Vehicle> vehicles){
+    public static List<VehicleDto> toDtos(List<Vehicle> vehicles){
         return vehicles.stream().map(VehicleMapper::toDto).collect(Collectors.toList());
     }
 }

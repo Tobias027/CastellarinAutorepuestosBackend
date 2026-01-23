@@ -29,10 +29,10 @@ public class Vehicle {
     private String Model;
 
     @Column(name = "start_production", nullable = false)
-    private Integer startProduction;
+    private LocalDate startProduction;
 
     @Column(name = "end_production")
-    private Integer endProduction;
+    private LocalDate endProduction;
 
     @Column(name = "engine", nullable = false)
     private String engine;

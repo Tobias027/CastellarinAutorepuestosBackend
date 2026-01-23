@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @AllArgsConstructor
@@ -13,17 +14,19 @@ import lombok.NoArgsConstructor;
 public class OrderItem {
 
     @EmbeddedId
+    @Column(name = "order_item_id")
     private OrderItemId id;
 
     @ManyToOne
     @MapsId("orderId")
     @JoinColumn(name="order_id",  nullable = false)
-    private Order orderId;
+    @ToString.Exclude
+    private Order order;
 
     @ManyToOne
     @MapsId("productId")
     @JoinColumn(name="product_id",nullable = false)
-    private Product productId;
+    private Product product;
 
     @Column(name="quantity", nullable = false)
     private Integer quantity;

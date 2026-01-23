@@ -13,9 +13,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VehicleDto {
-    private VehicleBrand Brand;
+    private String Brand;
     private String Model;
-    private int startProduction;
-    private int endProduction;
+    private LocalDate startProduction;
+    private LocalDate endProduction;
     private String engine;
 }

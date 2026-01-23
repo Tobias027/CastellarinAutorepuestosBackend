@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 import org.hibernate.annotations.Type;
 
@@ -18,7 +20,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id", nullable = false, unique = true)
+    @Column(name = "product_id", nullable = false)
     private Long productId;
 
     @Column(nullable = false)
@@ -28,7 +30,7 @@ public class Product {
     @JoinColumn(name = "product_brand", nullable = false)
     private ProductBrand brand;
 
-    @Column(name="part_number")
+    @Column(name="part_number", unique = true)
     private String partNumber;
 
     @ManyToOne
@@ -51,8 +53,8 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
-    @Column(name="image_url", nullable = false)
-    private String imageUrl;
+    @Column(name="image_path", nullable = false)
+    private String imagePath;
 
     @Column(name="is_active", nullable = false)
     private Boolean isActive;
@@ -62,4 +64,22 @@ public class Product {
 
     @Column()
     private String notes;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"));
+        updatedAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"));
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"));
+    }
+
 }

@@ -15,6 +15,10 @@ import java.util.UUID;
 public class Category {
 
     @Id
-    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "category_id")
+    private Long id;
+
+    @Column(name = "category", nullable = false, unique = true)
     private String category;
 }

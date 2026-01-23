@@ -68,6 +68,9 @@ apidocs/
 # Archivos de configuración locales que no deben ir al repo
 *.env
 *.local
+src/main/resources/application.properties
+docker-compose.yml
+
 # Archivos de credenciales o secretos (ejemplos comunes)
 credentials.json
 key.pem
