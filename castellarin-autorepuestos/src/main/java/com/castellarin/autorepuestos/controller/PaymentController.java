@@ -8,10 +8,10 @@ import com.castellarin.autorepuestos.service.OrdersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 @RequestMapping("/payments")
 @RestController
@@ -26,5 +26,13 @@ public class PaymentController {
         Order order = ordersService.createPendingOrder(user,orderDto);
         PreferenceDto preferenceDto = mercadoPagoService.createPreference(order);
         return ResponseEntity.ok(preferenceDto);
+    }
+
+    @PostMapping("/webhook")
+    public ResponseEntity<String> receiveNotification(@RequestHeader String header,@RequestBody String request){
+        List<String> metadata = Arrays.stream(header.split(",")).toList();
+        System.out.println(metadata);
+        System.out.println(request);
+        return ResponseEntity.ok("");
     }
 }
