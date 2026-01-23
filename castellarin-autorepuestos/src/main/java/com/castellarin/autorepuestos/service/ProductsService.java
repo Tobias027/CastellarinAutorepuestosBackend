@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,6 @@ public class ProductsService {
     private final CategoryRepository categoryRepository;
     private final ProductVehicleCompRepository productVehicleCompRepository;
     private final ImageService imageService;
-    private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_SIZE = 20;
 
     public List<ProductDto> getFeaturedProducts(){
@@ -44,9 +44,9 @@ public class ProductsService {
             String direction
     ){
         Specification<Product> specification = Specification.allOf(ProductsSpecification.isActive())
-                .and(ProductsSpecification.contains(searchTerm))
-                .and(ProductsSpecification.hasBrand(brand))
-                .and(ProductsSpecification.hasCategory(category));
+                .and(ProductsSpecification.contains(searchTerm.toLowerCase()))
+                .and(ProductsSpecification.hasBrand(brand.toLowerCase()))
+                .and(ProductsSpecification.hasCategory(category.toLowerCase()));
                 //.and(ProductsSpecification.priceLowerthan(minPrice))
                 //.and(ProductsSpecification.priceGreaterthan(maxPrice));
 
@@ -56,6 +56,7 @@ public class ProductsService {
         return PageResponse.of(products);
     }
 
+    /*
     public ProductDetailsDto getProductById(long productId){
         Product product = productRepository.findById(productId);
         if(product == null){
@@ -66,10 +67,10 @@ public class ProductsService {
             return null;
         }
         return ProductDetailsMapper.toDto(product,compatible_vehicles);
-    }
+    }*/
 
     public ProductDetailsDto getProductDetailsByProductPart(String productPart){
-        Product product = productRepository.findProductByPartNumber(productPart);
+        Product product = productRepository.findProductByPartNumber(productPart.toLowerCase());
         if(product == null){
             return null;
         }
@@ -81,7 +82,7 @@ public class ProductsService {
     }
 
     public List<ProductCartDto> getProductByProductsParts(List<String> productsParts){
-        List<Product> products = productRepository.getProductsByPartNumberIsIn(productsParts);
+        List<Product> products = productRepository.getProductsByPartNumberIsIn(productsParts.stream().map(String::toLowerCase).collect(Collectors.toList()));
         return ProductMapper.toCartProductsDto(products);
     }
 
