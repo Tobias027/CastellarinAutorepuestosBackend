@@ -42,6 +42,8 @@ public class PaymentController {
         String resourceId = data.get("id").toString();
 
         if(SignatureVerifier.isValidSignature(resourceId,ts,v1,webhookSecret)){
+            System.out.println("SIGNATURE: "+signature+" \n");
+            System.out.println("PAYLOAD: "+payload+" \n");
             return ResponseEntity.ok("");
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
