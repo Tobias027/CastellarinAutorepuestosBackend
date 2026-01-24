@@ -46,6 +46,7 @@ public class PaymentController {
             System.out.println("PAYLOAD: "+payload+" \n");
             return ResponseEntity.ok("");
         } else {
+            System.out.println("NO VALIDO BIEN LA FIRMA");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
