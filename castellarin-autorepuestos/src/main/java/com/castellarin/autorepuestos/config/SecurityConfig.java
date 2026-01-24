@@ -53,7 +53,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         //TODO PRODUCCION
-        configuration.setAllowedOrigins(List.of("http://localhost:3000","https://castellarin-autorepuestos-webb.vercel.app"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000","https://castellarinautorepuestos.vercel.app"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of(
                 "Authorization",
