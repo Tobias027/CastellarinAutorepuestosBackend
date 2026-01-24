@@ -26,6 +26,9 @@ public class MercadoPagoService {
     @Value("${mp.test.access-token}")
     private String testAccessToken;
 
+    @Value("${url}")
+    private String url;
+
     public PreferenceDto createPreference(Order order){
 
         MercadoPagoConfig.setAccessToken(testAccessToken);
@@ -33,9 +36,9 @@ public class MercadoPagoService {
         List<PreferenceItemRequest> items = new ArrayList<>();
 
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                .success("http://localhost:8080/success")
-                .pending("http://localhost:8080/pending")
-                .failure("http://localhost:8080/failure")
+                .success(url+"/success")
+                .pending(url+"/pending")
+                .failure(url+"/failure")
                 .build();
         for(OrderItem orderItem : order.getItems()){
             PreferenceItemRequest itemRequest =
