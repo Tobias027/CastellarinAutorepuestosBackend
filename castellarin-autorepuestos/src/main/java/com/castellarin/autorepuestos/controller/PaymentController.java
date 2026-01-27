@@ -33,7 +33,7 @@ public class PaymentController {
     }
 
     @PostMapping("/webhook")
-    public ResponseEntity<String> receiveNotification(@RequestHeader("x-signature") String signature,@RequestBody Map<String,Object> payload){
+    public ResponseEntity<String> receiveNotification(@RequestHeader("x-signature") String signature, @RequestHeader("x-request-id") String requestId, @RequestBody Map<String,Object> payload){
         System.out.println("LLEGO LA REQUEST AL BACKEND");
         String[] parts = signature.split(",");
         String ts = parts[0].split("=")[1];
@@ -47,7 +47,7 @@ public class PaymentController {
         Map<String, Object> data = (Map<String, Object>) payload.get("data");
         String resourceId = data.get("id").toString();
 
-        if(SignatureVerifier.isValidSignature(resourceId,ts,v1,webhookSecret)){
+        if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
             System.out.println("PASO \n");
             return ResponseEntity.ok("");
         } else {

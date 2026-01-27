@@ -9,9 +9,9 @@ import java.util.HexFormat;
 
 public class SignatureVerifier {
 
-    public static boolean isValidSignature(String requestId, String ts, String xSignature, String secretKey) {
+    public static boolean isValidSignature(String resourceId, String requestId, String ts, String xSignature, String secretKey) {
         try {
-            String manifest = String.format("id:%s,ts:%s", requestId, ts);
+            String manifest = String.format("id:%s;request-id:%s;ts:%s;", resourceId, requestId, ts);
             System.out.println(manifest);
 
             Mac sha256Hmac = Mac.getInstance("HmacSHA256");
