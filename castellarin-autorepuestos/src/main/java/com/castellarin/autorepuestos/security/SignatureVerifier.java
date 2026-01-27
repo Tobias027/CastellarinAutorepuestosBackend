@@ -12,6 +12,7 @@ public class SignatureVerifier {
     public static boolean isValidSignature(String requestId, String ts, String xSignature, String secretKey) {
         try {
             String manifest = String.format("id:%s,ts:%s", requestId, ts);
+            System.out.println(manifest);
 
             Mac sha256Hmac = Mac.getInstance("HmacSHA256");
             SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
@@ -19,6 +20,9 @@ public class SignatureVerifier {
 
             byte[] hashBytes = sha256Hmac.doFinal(manifest.getBytes(StandardCharsets.UTF_8));
             String generatedHash = HexFormat.of().formatHex(hashBytes);
+
+            System.out.println("hash generado: "+generatedHash);
+            System.out.println("hash recibido: "+xSignature);
 
             return generatedHash.equals(xSignature);
 
