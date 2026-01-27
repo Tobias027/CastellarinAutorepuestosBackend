@@ -47,7 +47,7 @@ public class PaymentController {
         Map<String, Object> data = (Map<String, Object>) payload.get("data");
         String resourceId = data.get("id").toString();
 
-        if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
+        if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,"46bef9649d6261541e66cace2eb0fb35bb7fb19668251131e7a83db8906922e4")){
             System.out.println("PASO \n");
             return ResponseEntity.ok("");
         } else {
