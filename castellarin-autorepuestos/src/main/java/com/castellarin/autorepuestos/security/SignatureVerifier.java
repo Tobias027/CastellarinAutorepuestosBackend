@@ -20,9 +20,6 @@ public class SignatureVerifier {
             byte[] hashBytes = sha256Hmac.doFinal(manifest.getBytes(StandardCharsets.UTF_8));
             String generatedHash = HexFormat.of().formatHex(hashBytes);
 
-            System.out.println("hash generado: "+generatedHash);
-            System.out.println("hash recibido: "+xSignature);
-
             return generatedHash.equals(xSignature);
 
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
