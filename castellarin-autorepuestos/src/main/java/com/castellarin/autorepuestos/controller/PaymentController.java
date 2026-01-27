@@ -34,6 +34,7 @@ public class PaymentController {
 
     @PostMapping("/webhook")
     public ResponseEntity<String> receiveNotification(@RequestHeader("x-signature") String signature,@RequestBody Map<String,Object> payload){
+        System.out.println("LLEGO LA REQUEST AL BACKEND");
         String[] parts = signature.split(",");
         String ts = parts[0].split("=")[1];
         String v1 = parts[1].split("=")[1];
