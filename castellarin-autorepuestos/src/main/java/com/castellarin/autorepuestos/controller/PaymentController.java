@@ -64,18 +64,6 @@ public class PaymentController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }*/
 
-        {   action=create,
-            application_id=,
-                data={currency_id=,
-                        marketplace=NONE,
-                        status=opened},
-                date_created=2026-01-31T17:57:13.335-04:00,
-                id=37759480091,
-                live_mode=false,
-                status=opened,
-                type=topic_merchant_order_wh,
-                user_id=2145684618,
-                version=0}
         return ResponseEntity.ok("");
     }
 }
