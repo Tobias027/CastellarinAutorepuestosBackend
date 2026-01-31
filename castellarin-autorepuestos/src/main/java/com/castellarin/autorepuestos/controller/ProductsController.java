@@ -7,6 +7,7 @@ import com.castellarin.autorepuestos.service.ProductsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,7 +19,6 @@ import java.util.List;
 public class ProductsController {
 
     private final ProductsService productsService;
-    private final OrdersService ordersService;
 
     @GetMapping("/featured_products")
     public ResponseEntity<List<ProductDto>> getFeaturedProducts(){
@@ -53,8 +53,8 @@ public class ProductsController {
     }
 
     @PostMapping("/create_product")
-    public ResponseEntity<Product> createProduct(@RequestBody CreateProductDto createProductDto) throws URISyntaxException {
-        Product createdProduct = productsService.createProduct(createProductDto);
+    public ResponseEntity<Product> createProduct(@ModelAttribute CreateProductDto createProductDto, @RequestPart("file") MultipartFile file) throws URISyntaxException {
+        Product createdProduct = productsService.createProduct(createProductDto,file);
         URI location = new URI("http://localhost:8081/products/"+createdProduct.getPartNumber());
         return ResponseEntity.created(location).body(createdProduct);
     }

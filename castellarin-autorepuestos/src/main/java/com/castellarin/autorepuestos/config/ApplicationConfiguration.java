@@ -2,6 +2,8 @@ package com.castellarin.autorepuestos.config;
 
 
 import com.castellarin.autorepuestos.repository.UserRepository;
+import com.cloudinary.Cloudinary;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class ApplicationConfiguration {
+
+    @Value("${cloudinary-url}")
+    private String cloudinaryUrl;
+
     private final UserRepository userRepository;
     public ApplicationConfiguration(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -43,5 +49,10 @@ public class ApplicationConfiguration {
         authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;
+    }
+
+    @Bean
+    public Cloudinary cloudinary(){
+        return new Cloudinary(cloudinaryUrl);
     }
 }

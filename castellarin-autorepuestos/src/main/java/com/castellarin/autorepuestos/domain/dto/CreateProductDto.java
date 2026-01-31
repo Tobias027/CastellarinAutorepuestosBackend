@@ -14,7 +14,6 @@ public class CreateProductDto {
     private Double price;
     private Double offerPrice;
     private Integer stock;
-    private String base64Image;
     private Boolean isActive;
     private Double costPrice;
     private String notes;
