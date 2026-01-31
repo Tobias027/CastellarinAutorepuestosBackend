@@ -43,20 +43,21 @@ public class PaymentController {
         String v1 = parts[1].split("=")[1];
 
         String resourceId = extractResourceId(payload);
+        System.out.println(resourceId);
         if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
             try{
                 System.out.println("PASO LA VALIDACION");
                 MerchantOrderClient merchantOrderClient = new MerchantOrderClient();
                 System.out.println("\n\n\n\n");
                 System.out.println("Merchant order");
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getDateCreated());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getLastUpdated());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getId());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getOrderStatus());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getPayer());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getItems());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getTotalAmount());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).isCancelled());
+                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getDateCreated());
+                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getLastUpdated());
+                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getId());
+                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getOrderStatus());
+                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getPayer());
+                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getItems());
+                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getTotalAmount());
+                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).isCancelled());
                 System.out.println("\n\n\n\n");
             } catch (MPException | MPApiException e) {
                 throw new RuntimeException(e);
