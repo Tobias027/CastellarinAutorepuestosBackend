@@ -41,7 +41,7 @@ public class PaymentController {
         String ts = parts[0].split("=")[1];
         String v1 = parts[1].split("=")[1];
 
-       String resourceId = payload.get("data.id").toString();
+       String resourceId = payload.get("id").toString();
 
         if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
             try{
