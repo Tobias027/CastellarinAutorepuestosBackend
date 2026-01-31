@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -98,11 +99,11 @@ public class ProductsService {
         return product;
     }
 
-    public Product createProduct(CreateProductDto createProductDto){
+    public Product createProduct(CreateProductDto createProductDto, MultipartFile file){
         Product product = new Product();
         ProductBrand brand = productBrandRepository.findProductBrandByBrand(createProductDto.getBrand());
         Category category = categoryRepository.findByCategory(createProductDto.getCategory());
-        Map uploadResult = imageService.uploadProductsImage(createProductDto.getBase64Image(),createProductDto.getPartNumber());
+        Map uploadResult = imageService.uploadProductsImage(file,createProductDto.getPartNumber());
 
         product.setName(createProductDto.getName());
         product.setBrand(brand);
@@ -113,7 +114,7 @@ public class ProductsService {
         product.setPrice(createProductDto.getPrice());
         product.setOfferPrice(createProductDto.getOfferPrice());
         product.setStock(createProductDto.getStock());
-        product.setImagePath(uploadResult.get("url").toString());
+        product.setImagePath(uploadResult.get("secure_url").toString());
         product.setIsActive(createProductDto.getIsActive());
         product.setCostPrice(createProductDto.getCostPrice());
         product.setNotes(createProductDto.getNotes());
