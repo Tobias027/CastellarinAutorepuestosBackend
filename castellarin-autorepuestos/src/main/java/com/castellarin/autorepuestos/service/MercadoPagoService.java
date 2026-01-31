@@ -64,7 +64,6 @@ public class MercadoPagoService {
 
         try {
             Preference preference = client.create(preferenceRequest);
-            System.out.println(preference.toString());
             return  new PreferenceDto(preference.getId());
         } catch (MPException mpException) {
             throw new RuntimeException(mpException);

@@ -41,27 +41,28 @@ public class PaymentController {
         String ts = parts[0].split("=")[1];
         String v1 = parts[1].split("=")[1];
 
-        String resourceId = payload.get("id").toString();
-
+       System.out.println(payload.toString());
+        /*
         if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
             try{
-            MerchantOrderClient merchantOrderClient = new MerchantOrderClient();
-            System.out.println("\n\n\n\n");
-            System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getDateCreated());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getLastUpdated());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getId());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getOrderStatus());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getPayer());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getItems());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getTotalAmount());
-                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).isCancelled());
+                MerchantOrderClient merchantOrderClient = new MerchantOrderClient();
                 System.out.println("\n\n\n\n");
+                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getDateCreated());
+                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getLastUpdated());
+                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getId());
+                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getOrderStatus());
+                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getPayer());
+                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getItems());
+                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getTotalAmount());
+                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).isCancelled());
+                    System.out.println("\n\n\n\n");
             } catch (MPException | MPApiException e) {
                 throw new RuntimeException(e);
             }
             return ResponseEntity.ok("");
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        */
+        return ResponseEntity.ok("");
     }
 }
