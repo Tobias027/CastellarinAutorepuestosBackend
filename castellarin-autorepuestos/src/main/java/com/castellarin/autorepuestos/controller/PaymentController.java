@@ -38,14 +38,18 @@ public class PaymentController {
         String ts = parts[0].split("=")[1];
         String v1 = parts[1].split("=")[1];
 
-        Map<String, Object> data = (Map<String, Object>) payload.get("data");
-        String resourceId = data.get("id").toString();
-
+        System.out.println(ts);
+        System.out.println(v1);
+        System.out.println(requestId);
+        System.out.println(payload);
+        //String resourceId = data.get("id").toString();
+        /*
         if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
             System.out.println("PAYLOAD\n "+payload);
             return ResponseEntity.ok("");
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        }*/
+        return ResponseEntity.ok("");
     }
 }
