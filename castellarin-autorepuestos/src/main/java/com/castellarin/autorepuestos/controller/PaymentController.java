@@ -41,8 +41,8 @@ public class PaymentController {
         String ts = parts[0].split("=")[1];
         String v1 = parts[1].split("=")[1];
 
-       System.out.println(payload.toString());
-        /*
+       String resourceId = payload.get("data.id").toString();
+
         if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
             try{
                 MerchantOrderClient merchantOrderClient = new MerchantOrderClient();
@@ -62,7 +62,6 @@ public class PaymentController {
             return ResponseEntity.ok("");
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        */
-        return ResponseEntity.ok("");
+        }
     }
 }
