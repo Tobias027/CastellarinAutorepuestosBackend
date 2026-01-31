@@ -26,6 +26,9 @@ public class MercadoPagoService {
     @Value("${mp.test.access-token}")
     private String testAccessToken;
 
+    @Value("${url-webhook}")
+    private String urlWebhook;
+
     @Value("${url}")
     private String url;
 
@@ -36,10 +39,9 @@ public class MercadoPagoService {
         List<PreferenceItemRequest> items = new ArrayList<>();
 
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                .success(url+"/success")
-                .pending(url+"/pending")
-                .failure(url+"/failure")
+                .success(url+"/checkout/success")
                 .build();
+
         for(OrderItem orderItem : order.getItems()){
             PreferenceItemRequest itemRequest =
                     PreferenceItemRequest.builder()
@@ -53,13 +55,16 @@ public class MercadoPagoService {
         }
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(items)
+                .autoReturn("approved")
                 .backUrls(backUrls)
+                .notificationUrl(urlWebhook)
                 .build();
 
         PreferenceClient client = new PreferenceClient();
 
         try {
             Preference preference = client.create(preferenceRequest);
+            System.out.println(preference.toString());
             return  new PreferenceDto(preference.getId());
         } catch (MPException mpException) {
             throw new RuntimeException(mpException);
