@@ -41,29 +41,48 @@ public class PaymentController {
         String ts = parts[0].split("=")[1];
         String v1 = parts[1].split("=")[1];
 
-       /*String resourceId;*/
-        System.out.println("payload: "+payload.toString());
-        /*if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
+        String resourceId = extractResourceId(payload);
+        if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
             try{
                 MerchantOrderClient merchantOrderClient = new MerchantOrderClient();
                 System.out.println("\n\n\n\n");
+                System.out.println("Merchant order");
                 System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getDateCreated());
-                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getLastUpdated());
-                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getId());
-                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getOrderStatus());
-                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getPayer());
-                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getItems());
-                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getTotalAmount());
-                    System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).isCancelled());
-                    System.out.println("\n\n\n\n");
+                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getLastUpdated());
+                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getId());
+                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getOrderStatus());
+                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getPayer());
+                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getItems());
+                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).getTotalAmount());
+                System.out.println(merchantOrderClient.get(Long.parseLong(requestId)).isCancelled());
+                System.out.println("\n\n\n\n");
             } catch (MPException | MPApiException e) {
                 throw new RuntimeException(e);
             }
             return ResponseEntity.ok("");
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }*/
+        }
+    }
 
-        return ResponseEntity.ok("");
+    public String extractResourceId(Map<String, Object> payload) {
+        if (payload.get("data") instanceof Map) {
+            Map<?, ?> data = (Map<?, ?>) payload.get("data");
+            if (data.get("id") != null) return data.get("id").toString();
+        }
+
+        if (payload.get("resource") != null) {
+            String resource = payload.get("resource").toString();
+            if (resource.contains("/")) {
+                return resource.substring(resource.lastIndexOf("/") + 1);
+            }
+            return resource;
+        }
+
+        if (payload.get("id") != null) {
+            return payload.get("id").toString();
+        }
+
+        throw new RuntimeException("No resource id");
     }
 }
