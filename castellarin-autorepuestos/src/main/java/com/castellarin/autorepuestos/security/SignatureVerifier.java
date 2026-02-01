@@ -11,6 +11,11 @@ public class SignatureVerifier {
 
     public static boolean isValidSignature(String resourceId, String requestId, String ts, String xSignature, String secretKey) {
         try {
+            System.out.println(resourceId);
+            System.out.println(requestId);
+            System.out.println(ts);
+            System.out.println(xSignature);
+            System.out.println(secretKey);
             String manifest = String.format("id:%s;request-id:%s;ts:%s;", resourceId, requestId, ts);
 
             Mac sha256Hmac = Mac.getInstance("HmacSHA256");
