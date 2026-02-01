@@ -30,6 +30,7 @@ public class PaymentController {
 
     @PostMapping("/create-payment")
     public ResponseEntity<PreferenceDto> createOrder(@AuthenticationPrincipal User user, @RequestBody OrderDto orderDto){
+        System.out.println(webhookSecret);
         Order order = ordersService.createPendingOrder(user,orderDto);
         PreferenceDto preferenceDto = mercadoPagoService.createPreference(order);
         return ResponseEntity.ok(preferenceDto);
@@ -43,6 +44,10 @@ public class PaymentController {
         String v1 = parts[1].split("=")[1];
 
         String resourceId = extractResourceId(payload);
+
+        if (!payload.get("type").equals("payment")) {
+            return ResponseEntity.ok("");
+        }
 
         System.out.println("resourceId "+resourceId);
         System.out.println("signature "+signature);
