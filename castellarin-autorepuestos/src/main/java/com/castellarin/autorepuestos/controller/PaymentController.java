@@ -30,7 +30,6 @@ public class PaymentController {
 
     @PostMapping("/create-payment")
     public ResponseEntity<PreferenceDto> createOrder(@AuthenticationPrincipal User user, @RequestBody OrderDto orderDto){
-        System.out.println(webhookSecret);
         Order order = ordersService.createPendingOrder(user,orderDto);
         PreferenceDto preferenceDto = mercadoPagoService.createPreference(order);
         return ResponseEntity.ok(preferenceDto);
@@ -42,10 +41,11 @@ public class PaymentController {
         String[] parts = signature.split(",");
         String ts = parts[0].split("=")[1];
         String v1 = parts[1].split("=")[1];
+        String type = String.valueOf(payload.getOrDefault("type", ""));
 
         String resourceId = extractResourceId(payload);
 
-        if (!payload.get("type").equals("payment")) {
+        if (!type.equals("payment")) {
             return ResponseEntity.ok("");
         }
 
@@ -79,23 +79,26 @@ public class PaymentController {
     }
 
     public String extractResourceId(Map<String, Object> payload) {
-        if (payload.get("data") instanceof Map) {
-            Map<?, ?> data = (Map<?, ?>) payload.get("data");
-            if (data.get("id") != null) return data.get("id").toString();
+        Object dataObj = payload.get("data");
+        if (dataObj instanceof Map) {
+            Object idObj = ((Map<?, ?>) dataObj).get("id");
+            if (idObj != null) return idObj.toString();
         }
 
-        if (payload.get("resource") != null) {
-            String resource = payload.get("resource").toString();
+        Object resourceObj = payload.get("resource");
+        if (resourceObj != null) {
+            String resource = resourceObj.toString();
             if (resource.contains("/")) {
                 return resource.substring(resource.lastIndexOf("/") + 1);
             }
             return resource;
         }
 
-        if (payload.get("id") != null) {
-            return payload.get("id").toString();
+        Object idRootObj = payload.get("id");
+        if (idRootObj != null) {
+            return idRootObj.toString();
         }
 
-        throw new RuntimeException("No resource id");
+        return null;
     }
 }
