@@ -19,6 +19,8 @@ public class SignatureVerifier {
 
             byte[] hashBytes = sha256Hmac.doFinal(manifest.getBytes(StandardCharsets.UTF_8));
             String generatedHash = HexFormat.of().formatHex(hashBytes);
+            System.out.println("generated: "+generatedHash);
+            System.out.println("xsignature: "+ xSignature);
 
             return generatedHash.equals(xSignature);
 
