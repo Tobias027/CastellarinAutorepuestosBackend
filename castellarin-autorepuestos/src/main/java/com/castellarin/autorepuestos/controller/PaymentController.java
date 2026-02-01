@@ -43,7 +43,12 @@ public class PaymentController {
         String v1 = parts[1].split("=")[1];
 
         String resourceId = extractResourceId(payload);
-        System.out.println(resourceId);
+
+        System.out.println("resourceId "+resourceId);
+        System.out.println("signature "+signature);
+        System.out.println("requestId "+requestId);
+        System.out.println("payload "+payload);
+
         if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
             try{
                 System.out.println("PASO LA VALIDACION");
