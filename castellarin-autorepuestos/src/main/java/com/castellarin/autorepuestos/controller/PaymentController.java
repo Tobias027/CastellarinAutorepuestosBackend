@@ -41,7 +41,7 @@ public class PaymentController {
         String ts = parts[0].split("=")[1];
         String v1 = parts[1].split("=")[1];
         String type = String.valueOf(payload.getOrDefault("type", ""));
-
+        System.out.println(payload);
         String resourceId = extractResourceId(payload);
 
         if (!type.equals("payment")) {
