@@ -39,15 +39,16 @@ public class PaymentController {
             @RequestHeader("x-request-id") String requestId,
             @RequestBody JsonNode payload) {
 
-        String[] parts = signature.split(",");
-        String ts = parts[0].split("=")[1];
-        String v1 = parts[1].split("=")[1];
-        String type = String.valueOf(payload.get("type"));
+
+        String type = payload.path("type").asText();
         System.out.println(payload);
-        String resourceId = payload.get("data").get("id").asText();
 
         switch (type){
             case "payment":
+                String[] parts = signature.split(",");
+                String ts = parts[0].split("=")[1];
+                String v1 = parts[1].split("=")[1];
+                String resourceId = payload.get("data").get("id").asText();
                 if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
                     try{
                         System.out.println("PASO LA VALIDACION");
