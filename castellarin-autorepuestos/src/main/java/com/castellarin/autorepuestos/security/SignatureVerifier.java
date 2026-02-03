@@ -17,7 +17,6 @@ public class SignatureVerifier {
             String manifest = String.format("id:%s;request-id:%s;ts:%s;", resourceId, requestId, ts);
 
             System.out.println(manifest);
-            System.out.println(secretKey+" ;");
 
             Mac sha256Hmac = Mac.getInstance("HmacSHA256");
             SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA256");

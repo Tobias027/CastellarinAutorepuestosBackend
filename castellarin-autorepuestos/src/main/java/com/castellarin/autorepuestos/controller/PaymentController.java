@@ -6,17 +6,15 @@ import com.castellarin.autorepuestos.domain.entity.*;
 import com.castellarin.autorepuestos.security.SignatureVerifier;
 import com.castellarin.autorepuestos.service.MercadoPagoService;
 import com.castellarin.autorepuestos.service.OrdersService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.mercadopago.client.merchantorder.MerchantOrderClient;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RequestMapping("/payments")
 @RestController
@@ -36,49 +34,42 @@ public class PaymentController {
     }
 
     @PostMapping("/webhook")
-    public ResponseEntity<String> receiveNotification(@RequestHeader("x-signature") String signature, @RequestHeader("x-request-id") String requestId, @RequestBody Map<String,Object> payload) {
+    public ResponseEntity<String> receiveNotification(
+            @RequestHeader("x-signature") String signature,
+            @RequestHeader("x-request-id") String requestId,
+            @RequestBody JsonNode payload) {
+
         String[] parts = signature.split(",");
         String ts = parts[0].split("=")[1];
         String v1 = parts[1].split("=")[1];
-        String type = String.valueOf(payload.getOrDefault("type", ""));
+        String type = String.valueOf(payload.get("type"));
         System.out.println(payload);
-        String resourceId = extractResourceId(payload);
+        String resourceId = payload.get("data").get("id").asText();
 
-        if (!type.equals("payment")) {
-            return ResponseEntity.ok("");
+        switch (type){
+            case "payment":
+                if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
+                    try{
+                        System.out.println("PASO LA VALIDACION");
+                        MerchantOrderClient merchantOrderClient = new MerchantOrderClient();
+                        System.out.println("\n\n\n\n");
+                        System.out.println("Merchant order");
+                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getDateCreated());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getLastUpdated());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getId());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getOrderStatus());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getPayer());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getItems());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getTotalAmount());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).isCancelled());
+                        System.out.println("\n\n\n\n");
+                    } catch (MPException | MPApiException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                return ResponseEntity.ok("");
+            default:
+                return ResponseEntity.ok("");
         }
-
-        if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
-            try{
-                System.out.println("PASO LA VALIDACION");
-                MerchantOrderClient merchantOrderClient = new MerchantOrderClient();
-                System.out.println("\n\n\n\n");
-                System.out.println("Merchant order");
-                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getDateCreated());
-                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getLastUpdated());
-                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getId());
-                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getOrderStatus());
-                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getPayer());
-                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getItems());
-                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getTotalAmount());
-                System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).isCancelled());
-                System.out.println("\n\n\n\n");
-            } catch (MPException | MPApiException e) {
-                throw new RuntimeException(e);
-            }
-            return ResponseEntity.ok("");
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-    }
-
-    public String extractResourceId(Map<String, Object> payload) {
-        Object dataObj = payload.get("data");
-        if (dataObj instanceof Map) {
-            Object idObj = ((Map<?, ?>) dataObj).get("id");
-            if (idObj != null) return idObj.toString();
-        }
-
-        return null;
     }
 }
