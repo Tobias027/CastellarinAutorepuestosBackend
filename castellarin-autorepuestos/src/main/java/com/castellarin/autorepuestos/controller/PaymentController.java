@@ -73,9 +73,10 @@ public class PaymentController {
     }
 
     public String extractResourceId(Map<String, Object> payload) {
-        Object idRootObj = payload.get("id");
-        if (idRootObj != null) {
-            return idRootObj.toString();
+        Object dataObj = payload.get("data");
+        if (dataObj instanceof Map) {
+            Object idObj = ((Map<?, ?>) dataObj).get("id");
+            if (idObj != null) return idObj.toString();
         }
 
         return null;
