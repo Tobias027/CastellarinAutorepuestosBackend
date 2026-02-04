@@ -43,12 +43,14 @@ public class PaymentController {
 
         String type = payload.path("type").asText();
         System.out.println(payload);
-
         switch (type){
             case "payment":
                 String[] parts = signature.split(",");
                 String ts = parts[0].split("=")[1];
                 String v1 = parts[1].split("=")[1];
+                System.out.println(signature);
+                System.out.println(v1);
+                System.out.println(ts);
                 if(SignatureVerifier.isValidSignature(dataId,requestId,ts,v1,webhookSecret)){
                     try{
                         System.out.println("PASO LA VALIDACION");
