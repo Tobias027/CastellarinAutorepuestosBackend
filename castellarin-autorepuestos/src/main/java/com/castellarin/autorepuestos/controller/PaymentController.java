@@ -45,18 +45,13 @@ public class PaymentController {
         System.out.println(payload);
         switch (type){
             case "payment":
-                String[] parts = signature.split(",");
+                /*String[] parts = signature.split(",");
                 String ts = parts[0].split("=")[1];
                 String v1 = parts[1].split("=")[1];
-                System.out.println(signature);
-                System.out.println(v1);
-                System.out.println(ts);
-                if(SignatureVerifier.isValidSignature(dataId,requestId,ts,v1,webhookSecret)){
+                if(SignatureVerifier.isValidSignature(dataId,requestId,ts,v1,webhookSecret)){*/
                     try{
-                        System.out.println("PASO LA VALIDACION");
                         MerchantOrderClient merchantOrderClient = new MerchantOrderClient();
-                        System.out.println("\n\n\n\n");
-                        System.out.println("Merchant order");
+                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).toString());
                         System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getDateCreated());
                         System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getLastUpdated());
                         System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getId());
@@ -69,7 +64,8 @@ public class PaymentController {
                     } catch (MPException | MPApiException e) {
                         throw new RuntimeException(e);
                     }
-                }
+                /*}*/
+
                 return ResponseEntity.ok("");
             default:
                 return ResponseEntity.ok("");
