@@ -35,6 +35,7 @@ public class PaymentController {
 
     @PostMapping("/webhook")
     public ResponseEntity<String> receiveNotification(
+            @RequestParam("data.id") String dataId,
             @RequestHeader("x-signature") String signature,
             @RequestHeader("x-request-id") String requestId,
             @RequestBody JsonNode payload) {
@@ -48,21 +49,20 @@ public class PaymentController {
                 String[] parts = signature.split(",");
                 String ts = parts[0].split("=")[1];
                 String v1 = parts[1].split("=")[1];
-                String resourceId = payload.get("data").get("id").asText();
-                if(SignatureVerifier.isValidSignature(resourceId,requestId,ts,v1,webhookSecret)){
+                if(SignatureVerifier.isValidSignature(dataId,requestId,ts,v1,webhookSecret)){
                     try{
                         System.out.println("PASO LA VALIDACION");
                         MerchantOrderClient merchantOrderClient = new MerchantOrderClient();
                         System.out.println("\n\n\n\n");
                         System.out.println("Merchant order");
-                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getDateCreated());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getLastUpdated());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getId());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getOrderStatus());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getPayer());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getItems());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).getTotalAmount());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(resourceId)).isCancelled());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getDateCreated());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getLastUpdated());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getId());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getOrderStatus());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getPayer());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getItems());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getTotalAmount());
+                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).isCancelled());
                         System.out.println("\n\n\n\n");
                     } catch (MPException | MPApiException e) {
                         throw new RuntimeException(e);
