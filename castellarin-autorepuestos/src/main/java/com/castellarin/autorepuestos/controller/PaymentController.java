@@ -16,6 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 @RequestMapping("/payments")
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +31,9 @@ public class PaymentController {
     private final MercadoPagoService mercadoPagoService;
     @Value("${mp.test.webhook-secret-key}")
     private String webhookSecret;
+
+    @Value("${mp.test.access-token}")
+    private String accessToken;
 
     @PostMapping("/create-payment")
     public ResponseEntity<PreferenceDto> createOrder(@AuthenticationPrincipal User user, @RequestBody OrderDto orderDto){
@@ -50,18 +59,24 @@ public class PaymentController {
                 String v1 = parts[1].split("=")[1];
                 if(SignatureVerifier.isValidSignature(dataId,requestId,ts,v1,webhookSecret)){*/
                     try{
-                        MerchantOrderClient merchantOrderClient = new MerchantOrderClient();
-                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).toString());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getDateCreated());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getLastUpdated());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getId());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getOrderStatus());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getPayer());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getItems());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).getTotalAmount());
-                        System.out.println(merchantOrderClient.get(Long.parseLong(dataId)).isCancelled());
-                        System.out.println("\n\n\n\n");
-                    } catch (MPException | MPApiException e) {
+                        String url = "https://api.mercadopago.com/v1/payments/" + dataId;
+                        HttpClient client = HttpClient.newHttpClient();
+                        HttpRequest request = HttpRequest.newBuilder()
+                                .uri(URI.create(url))
+                                .header("Content-Type", "application/json")
+                                .header("Authorization", "Bearer " + accessToken)
+                                .GET()
+                                .build();
+
+                        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                        System.out.println(response.statusCode());
+                        System.out.println(response.body());
+                        System.out.println(response.headers());
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 /*}*/
