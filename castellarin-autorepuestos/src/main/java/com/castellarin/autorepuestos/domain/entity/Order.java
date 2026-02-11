@@ -1,13 +1,9 @@
 package com.castellarin.autorepuestos.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Table(name="orders")
+@Builder
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,34 +23,25 @@ public class Order {
     @JoinColumn(
             name = "user_email",
             referencedColumnName = "email",
-            nullable = false
+            nullable = true
     )
     private User user;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private OrderAddress address;
+    @OneToOne(mappedBy = "order", cascade = CascadeType.PERSIST)
+    private ShippingAddress address;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToOne(mappedBy = "order", cascade = CascadeType.PERSIST)
     private BillingAddress billingAddress;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "order", cascade = CascadeType.PERSIST)
+    private Payment payment;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<OrderItem> items = new ArrayList<>();
 
     @Column(name="order_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
-
-    @Column(nullable = false)
-    private Double subtotal;
-
-    @Column(nullable = false)
-    private Double tax;
-
-    @Column(nullable = false)
-    private Double shipping;
-
-    @Column(nullable = false)
-    private Double total;
 
     @Column(nullable = false)
     private String notes;
@@ -69,20 +57,10 @@ public class Order {
         item.setOrder(this);
     }
 
-    public void setAddress(OrderAddress address) {
+    public void setAddress(ShippingAddress address) {
         this.address = address;
         address.setOrder(this);
     }
 
-    @PrePersist
-    public void prePersist() {
-        createdAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"));
-        updatedAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"));
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        updatedAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"));
-    }
 
 }
