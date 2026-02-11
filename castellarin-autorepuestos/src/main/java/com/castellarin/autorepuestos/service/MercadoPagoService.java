@@ -1,7 +1,6 @@
 package com.castellarin.autorepuestos.service;
 
 import com.castellarin.autorepuestos.domain.dto.PreferenceDto;
-import com.castellarin.autorepuestos.domain.entity.Order;
 import com.castellarin.autorepuestos.domain.entity.OrderItem;
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
@@ -26,45 +25,42 @@ public class MercadoPagoService {
     @Value("${mp.test.access-token}")
     private String testAccessToken;
 
-    @Value("${url-webhook}")
-    private String urlWebhook;
-
-    @Value("${url}")
-    private String url;
-
-    public PreferenceDto createPreference(Order order){
+    public PreferenceDto createPreference(com.castellarin.autorepuestos.domain.entity.Preference preference){
 
         MercadoPagoConfig.setAccessToken(testAccessToken);
 
         List<PreferenceItemRequest> items = new ArrayList<>();
 
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                .success(url+"/checkout/success")
+                .success((String) preference.getBackUrls())
                 .build();
 
-        for(OrderItem orderItem : order.getItems()){
+        for(OrderItem orderItem : preference.getOrderItems()){
             PreferenceItemRequest itemRequest =
                     PreferenceItemRequest.builder()
                             .id(orderItem.getProduct().getPartNumber())
                             .title(orderItem.getProduct().getName())
                             .quantity(orderItem.getQuantity())
-                            .currencyId("ARS")
                             .unitPrice(new BigDecimal(orderItem.getProduct().getPrice()))
+                            .currencyId("ARS")
                             .build();
             items.add(itemRequest);
         }
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(items)
-                .autoReturn("approved")
+                .shipments(null)
+                .binaryMode(true)
+                .metadata(preference.getMetadata())
                 .backUrls(backUrls)
-                .notificationUrl(urlWebhook)
+                .autoReturn("approved")
+                .notificationUrl(preference.getNotificationUrl())
                 .build();
 
         PreferenceClient client = new PreferenceClient();
 
         try {
-            Preference preference = client.create(preferenceRequest);
-            return  new PreferenceDto(preference.getId());
+            Preference mpPreference = client.create(preferenceRequest);
+            return  new PreferenceDto(mpPreference.getId());
         } catch (MPException mpException) {
             throw new RuntimeException(mpException);
         } catch (MPApiException apiException) {
