@@ -1,21 +1,19 @@
 package com.castellarin.autorepuestos.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name="order_addresses")
-public class OrderAddress {
+@Builder
+@Table(name="shipping_addresses")
+public class ShippingAddress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_address_id")
+    @Column(name = "shipping_address_id")
     private Long id;
 
     @OneToOne
