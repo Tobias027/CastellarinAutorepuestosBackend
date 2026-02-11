@@ -113,7 +113,7 @@ public class OrdersService {
         order.setNotes(orderDto.getNotes());
 
         //ORDER ADDRESS
-        OrderAddress orderAddress = OrderAddressMapper.ToEntity(orderDto.getOrderAddress());
+        ShippingAddress orderAddress = OrderAddressMapper.ToEntity(orderDto.getOrderAddress());
         //BILLING ADDRESS
         BillingAddress billingAddress = BillingAddressMapper.toEntity(orderDto.getBillingAddress());
 
