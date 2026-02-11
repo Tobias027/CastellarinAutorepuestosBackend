@@ -1,5 +1,6 @@
 package com.castellarin.autorepuestos.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,9 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Map;
+
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Data
@@ -65,20 +68,12 @@ public class Product {
     private String notes;
 
     @Column(name = "created_at")
+    @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
+    @UpdateTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
-
-    @PrePersist
-    public void prePersist() {
-        createdAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"));
-        updatedAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"));
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        updatedAt = LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"));
-    }
-
 }
