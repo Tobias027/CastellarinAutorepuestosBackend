@@ -57,7 +57,7 @@ public class OrdersService {
 
         Order savedOrder = orderRepository.save(order);
         //ORDER ADDRESS
-        OrderAddress orderAddress = OrderAddressMapper.ToEntity(orderDto.getOrderAddress());
+        ShippingAddress orderAddress = OrderAddressMapper.ToEntity(orderDto.getOrderAddress());
         orderAddress.setOrder(savedOrder);
         orderAddressRepository.save(orderAddress);
         //BILLING ADDRESS
