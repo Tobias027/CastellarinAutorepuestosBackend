@@ -36,6 +36,7 @@ public class Order {
     @OneToOne(mappedBy = "order", cascade = CascadeType.PERSIST)
     private Payment payment;
 
+    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<OrderItem> items = new ArrayList<>();
 
@@ -43,7 +44,21 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    //MOMENTANEO
     @Column(nullable = false)
+    private Double subtotal;
+
+    @Column(nullable = false)
+    private Double tax;
+
+    @Column(nullable = false)
+    private Double shipping;
+
+    @Column(nullable = false)
+    private Double total;
+
+
+    @Column(nullable = true)
     private String notes;
 
     @Column(name = "created_at", nullable = false)
@@ -51,16 +66,5 @@ public class Order {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
-    public void addOrderItem(OrderItem item) {
-        this.items.add(item);
-        item.setOrder(this);
-    }
-
-    public void setAddress(ShippingAddress address) {
-        this.address = address;
-        address.setOrder(this);
-    }
-
 
 }
