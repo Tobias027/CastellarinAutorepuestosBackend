@@ -4,7 +4,7 @@ import com.castellarin.autorepuestos.domain.dto.OrderDto;
 import com.castellarin.autorepuestos.domain.dto.PreferenceDto;
 import com.castellarin.autorepuestos.domain.entity.*;
 import com.castellarin.autorepuestos.service.MercadoPagoService;
-import com.castellarin.autorepuestos.service.OrderOrchestratorService;
+//import com.castellarin.autorepuestos.service.OrderOrchestratorService;
 import com.castellarin.autorepuestos.service.PreferenceService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PaymentController {
 
-    private final OrderOrchestratorService orderOrchestratorService;
+    //private final OrderOrchestratorService orderOrchestratorService;
     private final PreferenceService preferenceService;
     private final MercadoPagoService mercadoPagoService;
     @Value("${mp.test.webhook-secret-key}")
