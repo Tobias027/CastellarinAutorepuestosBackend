@@ -2,9 +2,9 @@ package com.castellarin.autorepuestos.domain.entity;
 
 public enum OrderStatus {
     PENDING,
-    RECEIVED,
+    APPROVED,
     PROCESSING,
-    SHIPPED,
     DELIVERED,
-    CANCELLED
+    RECEIVED,
+    CANCELLED,
 }

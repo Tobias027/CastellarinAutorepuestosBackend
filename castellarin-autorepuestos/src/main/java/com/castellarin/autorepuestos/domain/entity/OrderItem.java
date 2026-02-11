@@ -1,15 +1,13 @@
 package com.castellarin.autorepuestos.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 @Table(name="order_items")
 public class OrderItem {
 
@@ -30,6 +28,9 @@ public class OrderItem {
 
     @Column(name="quantity", nullable = false)
     private Integer quantity;
+
+    @Column(name="unit_price", nullable = false)
+    private Double unitPrice;
 
     @Column(name="subtotal", nullable = false)
     private Double subtotal;
