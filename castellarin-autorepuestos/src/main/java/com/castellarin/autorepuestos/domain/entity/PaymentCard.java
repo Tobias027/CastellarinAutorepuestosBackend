@@ -22,7 +22,6 @@ public class PaymentCard {
     @JoinColumn(name = "payment_id")
     private Payment payment;
 
-
     @Column(nullable = false)
     private String bin;
 
