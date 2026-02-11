@@ -54,13 +54,13 @@ public class PaymentController {
 
         String type = payload.path("type").asText();
         System.out.println(payload);
-        switch (type){
+        /*switch (type){
             //EN ESTE CASO SE CREA DE 0
             case "payment":
                 /*String[] parts = signature.split(",");
                 String ts = parts[0].split("=")[1];
                 String v1 = parts[1].split("=")[1];
-                if(SignatureVerifier.isValidSignature(dataId,requestId,ts,v1,webhookSecret)){*/
+                if(SignatureVerifier.isValidSignature(dataId,requestId,ts,v1,webhookSecret)){
                     try{
                         String url = "https://api.mercadopago.com/v1/payments/" + dataId;
                         HttpClient client = HttpClient.newHttpClient();
@@ -77,7 +77,7 @@ public class PaymentController {
                         Map<String,Object> responseBody = mapper.readValue(response.body(), Map.class);
 
 
-                        Boolean order = orderOrchestratorService.createOrder(responseBody);
+                        //Boolean order = orderOrchestratorService.createOrder(responseBody);
                         // TODO VER SI ANTES DE CREAR LA PREFERENCIA CHEQUEA STOCK
                         // Order order = ordersService
                         // Shipping Address
@@ -95,11 +95,12 @@ public class PaymentController {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                /*}*/
+                }
 
                 return ResponseEntity.ok("");
             default:
                 return ResponseEntity.ok("");
-        }
+        }*/
+        return ResponseEntity.ok("");
     }
 }
