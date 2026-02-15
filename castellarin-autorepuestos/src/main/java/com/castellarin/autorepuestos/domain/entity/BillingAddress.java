@@ -1,16 +1,14 @@
 package com.castellarin.autorepuestos.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="billing_address")
+@Builder
+@Table(name="billing_ad1dress")
 public class BillingAddress {
 
     @Id

@@ -11,6 +11,7 @@ public class OrderAddressMapper {
                 null,
                 null,
                 orderAddressDto.getContactName(),
+                orderAddressDto.getContactLastname(),
                 orderAddressDto.getContactEmail(),
                 orderAddressDto.getContactPhone(),
                 orderAddressDto.getStreet(),
@@ -34,7 +35,7 @@ public class OrderAddressMapper {
                 shippingAddress.getApartmentUnit(),
                 shippingAddress.getCity(),
                 shippingAddress.getDistrict(),
-                shippingAddress.getState(),
+                shippingAddress.getProvince(),
                 shippingAddress.getZip()
         );
     }
