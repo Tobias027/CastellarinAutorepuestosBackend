@@ -14,10 +14,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, String> {
 
     @Query(value = "SELECT p.part_number,p.name,p.category,p.price,p.offer_price,p.image_path\n" +
             "FROM products p \n" +
@@ -37,11 +36,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE PRODUCTS SET STOCK = STOCK - :cantidad WHERE id = :productoId AND STOCK >= :cantidad", nativeQuery = true)
-    int decrementStock(@Param("cantidad") Integer cantidad, @Param("productoId") String productoId);
+    @Query(value = "UPDATE PRODUCTS SET STOCK = STOCK - :cantidad WHERE part_number = :partNumber AND STOCK >= :cantidad", nativeQuery = true)
+    void decrementStock(@Param("cantidad") Integer cantidad, @Param("partNumber") String partNumber);
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE PRODUCTS SET STOCK = STOCK + :cantidad WHERE id = :productoId", nativeQuery = true)
-    int incrementStock(@Param("cantidad") Integer cantidad, @Param("productoId") String productoId);
+    @Query(value = "UPDATE PRODUCTS SET STOCK = STOCK + :cantidad WHERE part_number = :partNumber", nativeQuery = true)
+    void incrementStock(@Param("cantidad") Integer cantidad, @Param("partNumber") String partNumber);
 }
