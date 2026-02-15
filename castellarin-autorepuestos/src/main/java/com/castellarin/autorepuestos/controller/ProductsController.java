@@ -2,7 +2,6 @@ package com.castellarin.autorepuestos.controller;
 
 import com.castellarin.autorepuestos.domain.dto.*;
 import com.castellarin.autorepuestos.domain.entity.Product;
-import com.castellarin.autorepuestos.service.OrderOrchestratorService;
 import com.castellarin.autorepuestos.service.ProductsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,6 @@ import java.util.List;
 public class ProductsController {
 
     private final ProductsService productsService;
-    private final OrderOrchestratorService orderOrchestratorService;
 
     @GetMapping("/featured_products")
     public ResponseEntity<List<ProductDto>> getFeaturedProducts(){

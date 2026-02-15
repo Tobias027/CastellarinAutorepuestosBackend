@@ -13,5 +13,5 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class ProductVehicleCompId implements Serializable {
     private Long vehicleId;
-    private Long productId;
+    private String partNumber;
 }

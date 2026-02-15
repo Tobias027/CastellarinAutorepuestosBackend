@@ -21,7 +21,7 @@ public class ProductVehicleComp {
     private Vehicle vehicle;
 
     @ManyToOne
-    @MapsId("productId")
-    @JoinColumn(name = "product_id")
+    @MapsId("partNumber")
+    @JoinColumn(name = "part_number")
     private Product product;
 }

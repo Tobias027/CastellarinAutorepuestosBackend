@@ -19,27 +19,19 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query(value = "SELECT p.product_id,p.name,p.category,p.price,p.offer_price,p.image_path\n" +
+    @Query(value = "SELECT p.part_number,p.name,p.category,p.price,p.offer_price,p.image_path\n" +
             "FROM products p \n" +
-            "WHERE p.product_id in (\n" +
-            "\tSELECT product_id\n" +
+            "WHERE p.part_number in (\n" +
+            "\tSELECT part_number\n" +
             "\tFROM order_items o\n" +
-            "\tGROUP BY product_id\n" +
-            "\tORDER BY COUNT(product_id) desc\n" +
+            "\tGROUP BY part_number\n" +
+            "\tORDER BY COUNT(part_number) desc\n" +
             "\tLIMIT 4);", nativeQuery = true)
     List<ProductDto> findFeaturedProducts();
 
     Page findAll(Specification<Product> specification, Pageable pageable);
 
-    Product findById(long id);
-
-    @Query(value = "SELECT *\n" +
-            "FROM products p \n" +
-            "WHERE p.part_number = :partNumber;", nativeQuery = true)
-    Optional<Product> findByPartNumber();
-
     Product findProductByPartNumber(String partNumber);
-
 
     List<Product> getProductsByPartNumberIsIn(Collection<String> partNumbers);
 
