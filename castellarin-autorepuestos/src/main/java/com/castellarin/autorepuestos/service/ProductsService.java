@@ -9,11 +9,11 @@ import com.castellarin.autorepuestos.domain.specification.ProductsSpecification;
 import com.castellarin.autorepuestos.repository.CategoryRepository;
 import com.castellarin.autorepuestos.repository.ProductBrandRepository;
 import com.castellarin.autorepuestos.repository.ProductRepository;
-
 import com.castellarin.autorepuestos.repository.ProductVehicleCompRepository;
+
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import jakarta.transaction.Transactional;import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -74,7 +74,7 @@ public class ProductsService {
         if(product == null){
             return null;
         }
-        List<Vehicle> compatible_vehicles = productVehicleCompRepository.findByProductId(product.getProductId());
+        List<Vehicle> compatible_vehicles = productVehicleCompRepository.findByProductId(product.getPartNumber());
         if(compatible_vehicles.isEmpty()) {
             return null;
         }
@@ -118,6 +118,30 @@ public class ProductsService {
         product.setNotes(createProductDto.getNotes());
 
         return productRepository.save(product);
+    }
+    @Transactional
+    public void incrementProductStock(List<OrderItem> orderItems){
+        try{
+            for(OrderItem orderItem: orderItems){
+                productRepository.incrementStock(orderItem.getQuantity(),orderItem.getProduct().getPartNumber());
+            }
+        } catch (DataAccessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("No se pudo actualizar el stock de la orden", e);
+        }
+    }
+
+    public void decrementProductStock(List<OrderItem> orderItems){
+        try{
+            for(OrderItem orderItem: orderItems){
+                productRepository.decrementStock(orderItem.getQuantity(),orderItem.getProduct().getPartNumber());
+            }
+        } catch (DataAccessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("No se pudo actualizar el stock de la orden", e);
+        }
     }
 
 }

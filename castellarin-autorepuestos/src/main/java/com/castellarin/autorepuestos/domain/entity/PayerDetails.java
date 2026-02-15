@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Primary;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,16 +14,20 @@ import org.springframework.context.annotation.Primary;
 @Table(name = "payers_details")
 public class PayerDetails {
 
-    @Id
+    @EmbeddedId
+    private PayerDetailsId payerDetailsId;
+
+    @MapsId
     @OneToOne
     @JoinColumn(name="payment_id",nullable = false)
     private Payment payment;
 
+    @MapsId
     @Column(name = "payer_id",nullable = false)
     private String payerId;
 
-    @Column(nullable = false)
-    private String type;
+    @Column(name = "entity_type", nullable = false)
+    private String entityType;
 
     @Column(nullable = false)
     private String email;

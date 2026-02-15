@@ -24,6 +24,9 @@ public class ShippingAddress {
     @Column(name = "contact_name", nullable = false)
     private String contactName;
 
+    @Column(name = "contact_lastname", nullable = false)
+    private String contactLastname;
+
     @Column(name = "contact_email", nullable = false)
     private String contactEmail;
 
@@ -46,7 +49,7 @@ public class ShippingAddress {
     private String district;
 
     @Column(nullable = false)
-    private String state;
+    private String province;
 
     @Column(nullable = false)
     private String zip;

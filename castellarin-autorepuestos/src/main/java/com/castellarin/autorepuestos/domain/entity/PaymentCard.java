@@ -17,10 +17,15 @@ public class PaymentCard {
     @EmbeddedId
     private PaymentCardId paymentCardId;
 
-    @MapsId("paymentId")
+    @MapsId
     @ManyToOne
-    @JoinColumn(name = "payment_id")
+    @JoinColumn(name = "paymentId")
     private Payment payment;
+
+    @MapsId
+    @Column(name = "card_id")
+    private String cardId;
+
 
     @Column(nullable = false)
     private String bin;

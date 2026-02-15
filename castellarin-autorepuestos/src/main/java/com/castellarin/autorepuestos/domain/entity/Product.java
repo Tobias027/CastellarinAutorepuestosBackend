@@ -22,8 +22,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class Product {
 
     @Id
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @Column(name="part_number", unique = true)
+    private String partNumber;
 
     @Column(nullable = false)
     private String name;
@@ -31,9 +31,6 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "product_brand", nullable = false)
     private ProductBrand brand;
-
-    @Column(name="part_number", unique = true)
-    private String partNumber;
 
     @ManyToOne
     @JoinColumn(name = "category", nullable = false)

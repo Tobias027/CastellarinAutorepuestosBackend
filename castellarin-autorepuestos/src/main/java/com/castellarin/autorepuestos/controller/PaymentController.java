@@ -1,11 +1,11 @@
 package com.castellarin.autorepuestos.controller;
 
-import com.castellarin.autorepuestos.domain.dto.OrderDto;
+import com.castellarin.autorepuestos.domain.dto.CreatedOrder;import com.castellarin.autorepuestos.domain.dto.OrderDto;
 import com.castellarin.autorepuestos.domain.dto.PreferenceDto;
 import com.castellarin.autorepuestos.domain.entity.*;
 import com.castellarin.autorepuestos.service.MercadoPagoService;
-//import com.castellarin.autorepuestos.service.OrderOrchestratorService;
-import com.castellarin.autorepuestos.service.PreferenceService;
+import com.castellarin.autorepuestos.service.OrderOrchestratorService;
+import com.castellarin.autorepuestos.service.PaymentOrchestratorService;import com.castellarin.autorepuestos.service.PreferenceService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PaymentController {
 
-    //private final OrderOrchestratorService orderOrchestratorService;
+    private final OrderOrchestratorService orderOrchestratorService;
+    private final PaymentOrchestratorService paymentOrchestratorService;
     private final PreferenceService preferenceService;
     private final MercadoPagoService mercadoPagoService;
     @Value("${mp.test.webhook-secret-key}")
@@ -53,54 +54,88 @@ public class PaymentController {
         System.out.println(requestId);
 
         String type = payload.path("type").asText();
+        String action = payload.path("action").asText();
+
         System.out.println(payload);
-        /*switch (type){
-            //EN ESTE CASO SE CREA DE 0
-            case "payment":
+
+        //VALIDACION
                 /*String[] parts = signature.split(",");
                 String ts = parts[0].split("=")[1];
                 String v1 = parts[1].split("=")[1];
-                if(SignatureVerifier.isValidSignature(dataId,requestId,ts,v1,webhookSecret)){
-                    try{
-                        String url = "https://api.mercadopago.com/v1/payments/" + dataId;
-                        HttpClient client = HttpClient.newHttpClient();
-                        HttpRequest request = HttpRequest.newBuilder()
-                                .uri(URI.create(url))
-                                .header("Content-Type", "application/json")
-                                .header("Authorization", "Bearer " + accessToken)
-                                .GET()
-                                .build();
+                if(SignatureVerifier.isValidSignature(dataId,requestId,ts,v1,webhookSecret)){*/
 
-                        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        switch (type){
+            case "topic_merchant_order_wh":
+                Map<String,Object> merchantResponseBody;
+                try{
+                    String url = "https://api.mercadopago.com/v1/orders/" + dataId;
+                    HttpClient client = HttpClient.newHttpClient();
+                    HttpRequest request = HttpRequest.newBuilder()
+                            .uri(URI.create(url))
+                            .header("Content-Type", "application/json")
+                            .header("Authorization", "Bearer " + accessToken)
+                            .GET()
+                            .build();
 
-                        ObjectMapper mapper = new ObjectMapper();
-                        Map<String,Object> responseBody = mapper.readValue(response.body(), Map.class);
+                    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-
-                        //Boolean order = orderOrchestratorService.createOrder(responseBody);
-                        // TODO VER SI ANTES DE CREAR LA PREFERENCIA CHEQUEA STOCK
-                        // Order order = ordersService
-                        // Shipping Address
-                        // Billing Address
-                        //Payment
-                        //Payer Details
-                        //IF CARD PaymentCard
-
-                        //TODO BAJAR STOCK
-                        //TODO ENVIAR UN EMAIL
-                        // ENVIAR MAIL A NOSOTROS POR NUEVA VENTA??
-                        //TODO LOGICA DE CORREO
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    ObjectMapper mapper = new ObjectMapper();
+                    merchantResponseBody = mapper.readValue(response.body(), Map.class);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
+
+                if(action.equals("create")){
+                    Order createdOrder = orderOrchestratorService.createOrder(merchantResponseBody);
+                    CreatedOrder createdOrderDto = CreatedOrder.builder()
+                            .OrderId(createdOrder.getOrderId())
+                            .orderStatus(createdOrder.getStatus())
+                            .build();
+                    return ResponseEntity.created(null).body(createdOrderDto.toString());
+                } else if (action.equals("update")) {
+                    orderOrchestratorService.updateOrder(merchantResponseBody);
+                } else {
+                }
+            case "payment":
+                Map<String,Object> paymentResponseBody;
+                try{
+                    String url = "https://api.mercadopago.com/v1/payments/" + dataId;
+                    HttpClient client = HttpClient.newHttpClient();
+                    HttpRequest request = HttpRequest.newBuilder()
+                            .uri(URI.create(url))
+                            .header("Content-Type", "application/json")
+                            .header("Authorization", "Bearer " + accessToken)
+                            .GET()
+                            .build();
+
+                    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                    ObjectMapper mapper = new ObjectMapper();
+                    paymentResponseBody = mapper.readValue(response.body(), Map.class);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                if(action.equals("payment.created")){
+                    paymentOrchestratorService.createPayment(paymentResponseBody);
+                } else if (action.equals("payment.update")) {
+                    paymentOrchestratorService.updatePayment(paymentResponseBody);
+                } else {
+
+                }
+
+                   //TODO ENVIAR UN EMAIL
+                   // ENVIAR MAIL A NOSOTROS POR NUEVA VENTA??
+                   //TODO LOGICA DE CORREO
+                //}
 
                 return ResponseEntity.ok("");
             default:
                 return ResponseEntity.ok("");
-        }*/
-        return ResponseEntity.ok("");
+        }
     }
 }

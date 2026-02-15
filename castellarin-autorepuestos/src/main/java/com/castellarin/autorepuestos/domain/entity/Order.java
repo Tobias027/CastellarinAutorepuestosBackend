@@ -18,9 +18,8 @@ import java.util.List;
 @Builder
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", nullable = false)
-    private Long orderId;
+    private String orderId;
 
     @ManyToOne
     @JoinColumn(
@@ -36,20 +35,18 @@ public class Order {
     @OneToOne(mappedBy = "order", cascade = CascadeType.PERSIST)
     private BillingAddress billingAddress;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.PERSIST)
-    private Payment payment;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+    private List<Payment> payment;
 
     @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<OrderItem> items = new ArrayList<>();
 
-    @Column(name="order_status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    @Column(name="status", nullable = false)
+    private String status;
 
-    //MOMENTANEO
-    @Column(nullable = false)
-    private Double subtotal;
+    @Column(name="status_details", nullable = false)
+    private String statusDetails;
 
     @Column(nullable = false)
     private Double tax;
@@ -63,6 +60,9 @@ public class Order {
 
     @Column()
     private String notes;
+
+    @Column(name = "stock_reserved", nullable = false)
+    private Boolean stockReserved;
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp

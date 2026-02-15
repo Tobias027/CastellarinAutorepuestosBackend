@@ -1,8 +1,6 @@
 package com.castellarin.autorepuestos.service;
 
 import com.castellarin.autorepuestos.domain.entity.*;
-import com.castellarin.autorepuestos.domain.mappers.BillingAddressMapper;
-import com.castellarin.autorepuestos.domain.mappers.OrderAddressMapper;
 import com.castellarin.autorepuestos.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,108 +14,68 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderOrchestratorService {
 
-    private final ProductRepository productRepository;
-    private final ProductRepository paymentRepository;
     private final OrderRepository orderRepository;
-    private final OrderAddressRepository orderAddressRepository;
-    private final BillingAdressRepository billingAdressRepository;
     private final OrderItemsRepository orderItemsRepository;
-
     private final ProductsService productsService;
-    private final UserService userService;
 
     @Transactional
-    public Boolean createOrder(Map<String, Object> response) {
+    public Order createOrder(Map<String, Object> response) {
 
         //ORDER
-        /*
+        //TODO
+        // .tax()
+        // .shipping()
         Order order = Order.builder()
-                .notes((String) response.get("metadata.notes"))
-                .status(OrderStatus.PENDING)
+                .orderId("id")
+                .status((String) response.get("status"))
+                .statusDetails((String) response.get("status_detail"))
+                .total(Double.parseDouble((String) response.get("total_paid_amount")))
                 .build();
 
-        Order savedOrder = orderRepository.save(order);
+        final Order savedOrder = orderRepository.save(order);
 
         //ORDER ITEMS
-        List<Map<String, Object>> itemsBody = (List<Map<String, Object>>) response.get("additional_info.items");
+        List<Map<String, Object>> itemsBody = (List<Map<String, Object>>) response.get("items");
         List<OrderItem> orderItems = itemsBody.stream()
                 .map(item ->
                         {
+                            Integer quantity = Integer.parseInt(item.get("quantity").toString());
+                            Double unitPrice = Double.parseDouble(item.get("unit_price").toString());
+
                             return OrderItem.builder()
                                     .order(savedOrder)
-                                    .product(productsService.getProductByProductPart((String) item.get("id")))
-                                    .quantity(Integer.parseInt(item.get("quantity").toString()))
-                                    .unitPrice(Integer.parseInt(item.get("unit_price").toString()))
-                                    .subtotal(Integer.parseInt(item.get("unit_price").toString()) * Integer.parseInt(item.get("quantity").toString()))
+                                    .product(productsService.getProductByProductPart((String) item.get("external_code")))
+                                    .quantity(quantity)
+                                    .unitPrice(unitPrice)
+                                    .subtotal(unitPrice * quantity)
                                     .build();
                         }
                 )
                 .collect(Collectors.toList());
 
-        List<OrderItem> savedOrderItems = orderItemsRepository.saveAll(orderItems);
+        orderItemsRepository.saveAll(orderItems);
 
-        //SHIPPING ADDRESS
-        ShippingAddress shippingAddress = OrderAddressMapper.ToEntity(response.get("metadata.shippingAddress"));
-        shippingAddress.setOrder(savedOrder);
-        ShippingAddress savedShippingAddress = orderAddressRepository.save(shippingAddress);
-
-        //BILLING ADDRESS
-        BillingAddress billingAddress = BillingAddressMapper.toEntity(response.get("metadata.billingAddress"));
-        billingAddress.setOrder(savedOrder);
-        BillingAddress savedBillingAddress = billingAdressRepository.save(billingAddress);
-
-        //PAYMENT
-        Payment payment = Payment.builder()
-                .id(response.get("id"))
-                .order(response.get("id"))
-                .payerDetails()
-                .paymentCards()
-                .paymentMethodId(response.get("payment_method_id"))
-                .paymentTypeId(response.get("payment_type_id"))
-                .binaryMode(response.get("binary_mode"))
-                .status(response.get("status"))
-                .statusDetail(response.get("status_detail"))
-                .taxesAmount(response.get("taxes_amount"))
-                .shippingAmount(response.get("shipping_amount"))
-                .netReceivedAmount(response.get("transaction_details.net_received_amount"))
-                .transactionAmount(response.get("transaction_amount"))
-                .build();
-
-        Payment savedPayment = paymentRepository.save(payment);
-
-        //PAYER DETAILS
-        PayerDetails payerDetails = PayerDetails.builder()
-                .payerId()
-                .email()
-                .identificationType()
-                .identificationNumber()
-                .type()
-                .build();
-
-        PayerDetails savedPayerDetails;
-
-        //PAYMENT CARD
-        PaymentCard paymentCard = PaymentCard.builder()
-                .paymentCardId()
-                .bin()
-                .cardholderIdentificationType()
-                .cardholderIdentificationNumber()
-                .country()
-                .expirationMonth()
-                .expirationYear()
-                .firstSixDigits()
-                .lastFourDigits()
-                .pay
-                .build();
-
-        PayerDetails savedPaymentCard;
-
-
-
-        updateProductStock(orderItems);
-
-        return savedOrder==null ? false : true;*/
-        return true;
+        return savedOrder;
     }
 
+    @Transactional
+    public Order updateOrder(Map<String, Object> response) {
+        Order order = orderRepository.findByOrderId(((String) response.get("id")));
+
+        String newStatus = (String) response.get("status");
+        String newStatusDetail = (String) response.get("status_detail");
+
+        if(!order.getStatus().equals(newStatus)){
+            order.setStatus(newStatus);
+            order.setStatusDetails(newStatusDetail);
+
+            //TODO LOGICA DE STOCK SI PASA A CANCELADO
+        }
+
+        return orderRepository.save(order);
+    }
+
+    public Order getOrderById(String id){
+        return orderRepository.findByOrderId(id);
+    }
 }

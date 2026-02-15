@@ -18,10 +18,10 @@ public class Payment {
 
     @Id
     @Column(name = "payment_id")
-    private Long id;
+    private String id;
 
-    @OneToOne
-    @JoinColumn(name = "order_id")
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     @OneToOne(mappedBy = "payment",cascade = CascadeType.PERSIST, orphanRemoval = false)
@@ -46,14 +46,14 @@ public class Payment {
     private String statusDetail;
 
     @Column(name = "taxes_amount", nullable = false)
-    private String taxesAmount;
+    private Double taxesAmount;
 
     @Column(name = "shipping_amount", nullable = false)
-    private String shippingAmount;
+    private Double shippingAmount;
 
     @Column(name = "net_received_amount", nullable = false)
-    private String netReceivedAmount;
+    private Double netReceivedAmount;
 
     @Column(name = "transaction_amount", nullable = false)
-    private String transactionAmount;
+    private Double transactionAmount;
 }
