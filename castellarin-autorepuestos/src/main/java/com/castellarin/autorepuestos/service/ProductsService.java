@@ -74,7 +74,7 @@ public class ProductsService {
         if(product == null){
             return null;
         }
-        List<Vehicle> compatible_vehicles = productVehicleCompRepository.findByProductId(product.getPartNumber());
+        List<Vehicle> compatible_vehicles = productVehicleCompRepository.findByPartNumber(product.getPartNumber());
         if(compatible_vehicles.isEmpty()) {
             return null;
         }
