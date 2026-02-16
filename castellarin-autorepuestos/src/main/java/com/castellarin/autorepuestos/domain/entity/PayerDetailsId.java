@@ -14,6 +14,6 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode
 public class PayerDetailsId implements Serializable {
-    private Long paymentId;
+    private String paymentId;
     private String payerId;
 }

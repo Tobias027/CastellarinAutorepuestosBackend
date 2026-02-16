@@ -42,5 +42,5 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     @Modifying
     @Transactional
     @Query(value = "UPDATE PRODUCTS SET STOCK = STOCK + :cantidad WHERE part_number = :partNumber", nativeQuery = true)
-    void incrementStock(@Param("cantidad") Integer cantidad, @Param("partNumber") String partNumber);
+    int incrementStock(@Param("cantidad") Integer cantidad, @Param("partNumber") String partNumber);
 }

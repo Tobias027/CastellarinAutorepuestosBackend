@@ -22,8 +22,8 @@ public class OrderItem {
     private Order order;
 
     @ManyToOne
-    @MapsId("productId")
-    @JoinColumn(name="product_id",nullable = false)
+    @MapsId("partNumber")
+    @JoinColumn(name="product", referencedColumnName = "part_number", nullable = false)
     private Product product;
 
     @Column(name="quantity", nullable = false)
