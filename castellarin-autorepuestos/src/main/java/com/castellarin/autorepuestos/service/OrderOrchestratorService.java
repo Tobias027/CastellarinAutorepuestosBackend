@@ -28,8 +28,9 @@ public class OrderOrchestratorService {
         Order order = Order.builder()
                 .orderId("id")
                 .status((String) response.get("status"))
-                .statusDetails((String) response.get("status_detail"))
-                .total(Double.parseDouble((String) response.get("total_paid_amount")))
+                //TODO CAMBIAR NOMBRE DEL ATRIBUTO DENTRO DE LA ENTIDAD Y DEMAS
+                .statusDetails((String) response.get("order_status"))
+                .total(Double.parseDouble((String) response.get("total_amount")))
                 .build();
 
         final Order savedOrder = orderRepository.save(order);
