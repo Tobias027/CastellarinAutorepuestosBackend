@@ -47,6 +47,8 @@ public class PreferenceService {
 
         metadata.put("billingAddress", billingAddress);
         metadata.put("notes", notes);
+        metadata.put("shipping_address", shippingAddress);
+
         Preference preference = new Preference();
 
         //preference.setUser(user);
