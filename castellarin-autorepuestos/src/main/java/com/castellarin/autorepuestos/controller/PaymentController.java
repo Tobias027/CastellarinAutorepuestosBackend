@@ -68,7 +68,7 @@ public class PaymentController {
             case "topic_merchant_order_wh":
                 Map<String,Object> merchantResponseBody;
                 try{
-                    String url = "https://api.mercadopago.com/v1/orders/" + dataId;
+                    String url = "https://api.mercadopago.com/merchant_orders/" + dataId;
                     HttpClient client = HttpClient.newHttpClient();
                     HttpRequest request = HttpRequest.newBuilder()
                             .uri(URI.create(url))
@@ -93,9 +93,11 @@ public class PaymentController {
                             .OrderId(createdOrder.getOrderId())
                             .orderStatus(createdOrder.getStatus())
                             .build();
+                    System.out.println("ORDER CREADA EXITOSAMENTE");
                     return ResponseEntity.created(null).body(createdOrderDto.toString());
                 } else if (action.equals("update")) {
                     orderOrchestratorService.updateOrder(merchantResponseBody);
+                    System.out.println("ORDER ACTUALIZADA EXITOSAMENTE");
                 } else {
                 }
             case "payment":
@@ -122,10 +124,12 @@ public class PaymentController {
 
                 if(action.equals("payment.created")){
                     paymentOrchestratorService.createPayment(paymentResponseBody);
+                    System.out.println("PAYMENTE CREADO EXITOSAMENTE");
                 } else if (action.equals("payment.update")) {
                     paymentOrchestratorService.updatePayment(paymentResponseBody);
+                    System.out.println("PAYMENT CREADO EXITOSAMENTE");
                 } else {
-
+                    System.out.println("SE FUE POR ACA");
                 }
 
                    //TODO ENVIAR UN EMAIL
