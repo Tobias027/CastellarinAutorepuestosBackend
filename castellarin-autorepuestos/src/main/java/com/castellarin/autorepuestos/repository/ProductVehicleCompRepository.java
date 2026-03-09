@@ -17,7 +17,7 @@ public interface ProductVehicleCompRepository extends JpaRepository<ProductVehic
             "SELECT v.* " +
             "FROM product_vehicle_comps pvc " +
             "LEFT JOIN vehicles v ON pvc.vehicle_id = v.vehicle_id " +
-            "WHERE pvc.part_number = :partNumber",
+            "WHERE pvc.part_number = :productId",
             nativeQuery = true)
-    List<Vehicle> findByPartNumber(@Param("partNumber") String partNumber);
+    List<Vehicle> findByPartNumber(@Param("productId") String productId);
 }
