@@ -104,30 +104,31 @@ public class PaymentOrchestratorService {
 
         paymentCardRepository.save(paymentCard);
 
-        syncStock(responseBody);
+        syncStock(order,(String) responseBody.get("status"));
 
         return savedPayment;
     }
 
     //update Payment
-    public Payment updatePayment(Map<String, Object> resposeBody){
-        Payment payment =  paymentRepository.findPaymentById((String) resposeBody.get("id"));
+    public Payment updatePayment(Map<String, Object> responseBody){
+        Payment payment =  paymentRepository.findPaymentById((String) responseBody.get("id"));
 
-        String newStatus = (String) resposeBody.get("status");
-        String newStatusDetail = (String) resposeBody.get("status_detail");
+        String newStatus = (String) responseBody.get("status");
+        String newStatusDetail = (String) responseBody.get("status_detail");
 
         if(!payment.getStatus().equals(newStatus)){
             payment.setStatus(newStatus);
             payment.setStatusDetail(newStatusDetail);
         }
 
+        Order order = orderOrchestratorService.getOrderById((String) responseBody.get("order.id"));
+
+        syncStock(order,(String) newStatus);
+
         return paymentRepository.save(payment);
     }
 
-    public void syncStock(Map<String, Object> resposeBody) {
-        Order order = orderOrchestratorService.getOrderById((String) resposeBody.get("order.id"));
-
-        String newStatus = (String) resposeBody.get("status");
+    public void syncStock(Order order, String newStatus) {
 
         List<String> activeStates = Arrays.asList("pending", "approved", "in_process", "authorized", "in_mediation", "charged_back");
         List<String> inactiveStates = Arrays.asList("cancelled", "refunded", "rejected");
@@ -136,9 +137,11 @@ public class PaymentOrchestratorService {
         if(activeStates.contains(newStatus) && !order.getStockReserved()){
             productsService.incrementProductStock(order.getItems());
             order.setStockReserved(true);
+            System.out.println("SE INCREMENTO EL STOCK");
         } else if (inactiveStates.contains(newStatus) && order.getStockReserved()) {
             productsService.decrementProductStock(order.getItems());
             order.setStockReserved(false);
+            System.out.println("SE DECREMENTO EL STOCK");
         }
     }
 }
